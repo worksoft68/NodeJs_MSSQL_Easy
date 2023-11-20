@@ -1,0 +1,11 @@
+<%- include ('./../../helpers/format-date') %>
+    <%- include ('./../../helpers/format-summary') %>
+
+
+       
+
+            <% if(view_type==="view-list" ){ %>
+                <%- include ('./../../pages/categories/view-list') %>
+                    <%} else { %>
+                        <%- include ('./../../pages/categories/view-thumb') %>
+                            <%}%>

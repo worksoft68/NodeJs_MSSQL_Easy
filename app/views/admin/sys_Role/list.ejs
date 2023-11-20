@@ -1,0 +1,1568 @@
+<%- include ('./../helpers/pagination') %>
+	<% const collection="sys_Role" ; const linkPrefix=systemConfig.prefixAdmin + `/${collection}/`; %>
+		<%- include ('./../elements/notify') %>
+			<div class="container-fluid">
+				<input name="linkPrefix" id="linkPrefix" type="hidden" value="<%= linkPrefix %>">
+				<input name="params" id="params" type="hidden" value="<%= params %>">
+				<div class="card card-info card-outline">
+					<div class="card-header">
+						<h6 class="card-title">Form</h6>
+						<div class="card-tools">
+							<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+								title="Collapse">
+								<i class="fas fa-minus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="card-body" style="display: block;">
+						<form action=" <%= linkPrefix %>searchGet" method="GET" autocomplete="off">
+							<div class="form-group row">
+								<label id="labId" class="col-sm-2 col-form-label text-sm-right ">Id</label>
+								<div class="col-xs-4 col-sm-4">
+									<input type="number" readonly name="Id" id="Id" value="<%= item.Id %>"
+										class="form-control form-control-sm">
+								</div>
+								<label id="labName" class="col-sm-2 col-form-label text-sm-right required">Name</label>
+								<div class="col-xs-4 col-sm-4">
+									<input type="text" name="Name" id="Name" value="<%= item.Name %>"
+										class="form-control form-control-sm">
+								</div>
+								<label id="labNumericalOrder"
+									class="col-sm-2 col-form-label text-sm-right ">Order</label>
+								<div class="col-xs-4 col-sm-4">
+									<input type="number" name="NumericalOrder" id="NumericalOrder"
+										value="<%= item.NumericalOrder %>" class="form-control form-control-sm">
+								</div>
+								<label id="labStatus" class="col-sm-2 col-form-label text-sm-right ">Status</label>
+								<div class="col-xs-4 col-sm-4">
+									<input type="checkbox" name="Status" id="Status"
+										class="form-control form-control-sm">
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-xs-2 col-sm-2"></div>
+								<div class="col-xs-10 col-sm-10">
+									<input type="button" id="btnSave" class="btn-sm btn-success" value="Save">
+									&nbsp; <input type="button" id="btnSaveAs" class="btn-sm btn-danger"
+										value="Save as">
+									&nbsp; <input type="button" id="btnUpdate" class="btn-sm btn-primary"
+										value="Update">
+									&nbsp; <input type="button" id="btnDelete" class="btn-sm btn-danger" value="Delete">
+									&nbsp; <input type="button" id="btnSearchPost" class="btn-sm btn-info"
+										value="Search">
+									&nbsp; <input type="submit" id="btnSearchGet" class="btn-sm btn-warning"
+										value="Search Get">
+									&nbsp; <input type="button" id="btnExport" class="btn-sm btn-success"
+										value="Export">
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="text-success" id="divMessage"></div>
+							</div>
+						</form>
+						<input name="IdHidden" id="IdHidden" type="hidden">
+						<input name="listData" id="listData" type="hidden" value="<%= itemString %>">
+						<input name="sysLanguage" id="sysLanguage" type="hidden" value="<%= language %>">
+						<input name="listDataCatalogue" id="listDataCatalogue" type="hidden" value="<%= catalogue %>">
+					</div>
+				</div>
+
+
+
+				<!--  Sys_Role_Permission  ===================================================================== -->
+				<div class="card card-info card-outline collapsed-card">
+					<div class="card-header">
+						<h6 class="card-title">Management Role Permission</h6>
+						<div class="card-tools">
+							<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+								title="Collapse">
+								<i class="fas fa-plus"></i>
+							</button>
+						</div>
+					</div>
+					<div class="card-body" style="display: none; ">
+						<div class="row justify-content-between">
+							<label id="labRolePermissionId"
+								class="col-sm-2 col-form-label text-sm-right ">RolePermissionId</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="number" readonly name="RolePermissionId" id="RolePermissionId"
+									value="<%= item.RolePermissionId %>" class="form-control form-control-sm">
+							</div>
+							<label id="labFunctions"
+								class="col-sm-2 col-form-label text-sm-right required">Functions</label>
+							<div class="col-xs-2 col-sm-2">
+								<div class="dropdown">
+									<div id="divDropdownDescription" class="dropdown-content">
+										<input type="text" size="75" id="Description" name="Description"
+											onkeyup="filterSelectBox('Description')"
+											onfocus="focusDropdown('Description')" onblur="blurDropdown('Description')"
+											class="form-control form-control-sm" autocomplete="off">
+										<input id="Functions" name="Functions" type="hidden">
+										<div id="DivContenDescription" class="Divdropdown-content">
+										</div>
+									</div>
+								</div>
+							</div>
+							<label id="labFullAuthority"
+								class="col-sm-2 col-form-label text-sm-right ">FullAuthority</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="FullAuthority" id="FullAuthority"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labAddnew" class="col-sm-2 col-form-label text-sm-right ">Addnew</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Addnew" id="Addnew" class="form-control form-control-sm">
+							</div>
+							<label id="labUpdates" class="col-sm-2 col-form-label text-sm-right ">Updates</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Updates" id="Updates" class="form-control form-control-sm">
+							</div>
+							<label id="labReadOnly" class="col-sm-2 col-form-label text-sm-right ">ReadOnly</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="ReadOnly" id="ReadOnly"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labFullOfYourself"
+								class="col-sm-2 col-form-label text-sm-right ">FullOfYourself</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="FullOfYourself" id="FullOfYourself"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission1"
+								class="col-sm-2 col-form-label text-sm-right ">Permission1</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission1" id="Permission1"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission2"
+								class="col-sm-2 col-form-label text-sm-right ">Permission2</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission2" id="Permission2"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission3"
+								class="col-sm-2 col-form-label text-sm-right ">Permission3</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission3" id="Permission3"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission4"
+								class="col-sm-2 col-form-label text-sm-right ">Permission4</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission4" id="Permission4"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission5"
+								class="col-sm-2 col-form-label text-sm-right ">Permission5</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission5" id="Permission5"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission6"
+								class="col-sm-2 col-form-label text-sm-right ">Permission6</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission6" id="Permission6"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission7"
+								class="col-sm-2 col-form-label text-sm-right ">Permission7</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission7" id="Permission7"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission8"
+								class="col-sm-2 col-form-label text-sm-right ">Permission8</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission8" id="Permission8"
+									class="form-control form-control-sm">
+							</div>
+							<label id="labPermission9"
+								class="col-sm-2 col-form-label text-sm-right ">Permission9</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission9" id="Permission9"
+									class="form-control form-control-sm">
+							</div>
+
+							<label id="labPermission10"
+								class="col-sm-2 col-form-label text-sm-right ">Permission10</label>
+							<div class="col-xs-2 col-sm-2">
+								<input type="checkbox" name="Permission10" id="Permission10"
+									class="form-control form-control-sm">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-xs-2 col-sm-2"></div>
+							<div class="col-xs-10 col-sm-10">
+								<input type="button" id="btnSaveSys_Role_Permission" class="btn-sm btn-success"
+									value="Save">
+								&nbsp; <input type="button" id="btnUpdateSys_Role_Permission" class="btn-sm btn-primary"
+									value="Update">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="text-success" id="divMessageSys_Role_Permission"></div>
+						</div>
+						<input name="RolePermissionIdSys_Role_PermissionHidden"
+							id="RolePermissionIdSys_Role_PermissionHidden" type="hidden">
+						<div>
+							<div class="DivWide2">
+								<table id="tableSys_Role_Permission"
+									class="table table-bordered table-hover btn-table mb-0">
+									<thead>
+										<tr>
+											<th class="text-center">Action</a></th>
+											<th class="text-center" style="width:150px;"><label
+													id="labFunctionName_tb">Function</label></a>
+											</th>
+											<th class="text-center" style="width:300px;"><label id="labDescription_tb">
+													Description</label></a>
+											</th>
+											<th class="text-center" style="width:300px;"><label
+													id="labFullAuthority_tb">
+													Full Authority</label></a>
+											</th>
+											<th class="text-center" style="width:300px;"><label id="labAddNew_tb">
+													Add New</label></a>
+											</th>
+											<th class="text-center" style="width:300px;"><label id="labUpdates_tb">
+													Updates</label></a>
+											</th>
+											<th class="text-center" style="width:300px;"><label id="labReadOnly_tb">
+													Read Only</label></a>
+											</th>
+											<th class="text-center"><label id="labFullOfYourSelf_tb">
+													Full_Of Your_Self</label></a>
+											</th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission1_tb">Permission 1</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission2_tb">Permission 2</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission3_tb">Permission 3</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission4_tb">Permission 4</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission5_tb">Permission 5</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission6_tb">Permission 6</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission7_tb">Permission 7</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission8_tb">Permission 8 </label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission9_tb">Permission 9</label></a></th>
+											<th class="text-center" style="width:190px;"><label
+													id="labPermission10_tb">Permission 10</label></a></th>
+											<th class="text-center"><label id="labUserCreated_tb">User
+													Created</label></a>
+											</th>
+											<th class="text-center" style="width:190px;">
+												<label id="labDateTimeCreated_tb">DateTime Created</label></a>
+											</th>
+											<th class="text-center"><label id="labUserModified_tb">User
+													Modified</label></a>
+											</th>
+											<th class="text-center" style="width:190px;">
+												<label id="labDateTimeModified_tb">DateTime Modified</label></a>
+											</th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+											<th class="text-center"></a></th>
+
+
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end  Sys_Role_Permission ===================================================================== -->
+
+
+
+				<div class="card card-info card-outline">
+					<div class="card-header">
+						<h4 class="card-title">List data</h4>
+						<div class="card-tools">
+							<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+								title="Collapse"><i class="fas fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="card-body">
+						<table id="tableSys_Role" class="table table-bordered table-hover btn-table mb-0">
+							<thead>
+								<tr>
+									<th class="text-center">
+										<div class="custom-control custom-checkbox">
+											<input class="custom-control-input cbAll" type="checkbox" id="check-all">
+											<label for="check-all" class="custom-control-label"></label>
+										</div>
+									</th>
+									<th class="text-center"><label id="labName_tb">Name</label></a></th>
+									<th class="text-center"><label id="labNumericalOrder_tb">Order</label></a></th>
+									<th class="text-center"><label id="labStatus_tb">Status</label></a></th>
+									<th class="text-center"><label id="labUserCreated_tb">User
+											Created</label></a>
+									</th>
+									<th class="text-center" style="width:190px;">
+										<label id="labDateTimeCreated_tb">DateTime Created</label></a>
+									</th>
+									<th class="text-center"><label id="labUserModified_tb">User
+											Modified</label></a>
+									</th>
+									<th class="text-center" style="width:190px;">
+										<label id="labDateTimeModified_tb">DateTime Modified</label></a>
+									</th>
+									<th class="text-center">Action</a></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+									<th class="text-center"></a></th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-1 col-sm-1">Quantity per page:</div>
+					<div class="col-xs-1 col-sm-1">
+						<input type="number" class="form-control form-control-sm" name="numberItemPerPage"
+							id="numberItemPerPage" size="4">
+					</div>
+					<div class="col-xs-9 col-sm-9" id="paginationSys_Role">
+					</div>
+				</div>
+			</div>
+			<script type="application/javascript">
+				var language={};
+
+				onLoadData();
+				function onLoadData() {
+					$('#btnUpdateRolePermission').prop('hidden',true);
+					getLanguage();
+					setUpdateButtonStatus(false)
+					setInterfaceText();
+					getNumberItemPerPage();
+					var strData=$('#listData').val();
+					const arrData=JSON.parse(strData);
+					if(arrData.length>0) {
+						displayDataToTable(arrData);
+						var paramsString=$('#params').val();
+						const params=JSON.parse(paramsString);
+						var linkPrefix=$('#linkPrefix').val();
+						paginationHelper(params.pagination,"Sys_Role",params.currentStatus,params.keyword,linkPrefix,"paginationSys_Role");
+					}
+				}
+
+				function displayDataToTableSys_Role_Permission(datas) {
+					var table=document.getElementById("tableSys_Role_Permission");
+					var lengthtable=table.rows.length-1;
+					for(var n=lengthtable;n>0;n--) {
+						table.deleteRow(n);
+					}
+					var length=datas.length;
+
+					datas.forEach(function(data) {
+						var row=table.insertRow(1);
+
+						var cell0=row.insertCell(0);
+						var cell1=row.insertCell(1);
+						var cell2=row.insertCell(2);
+						var cell3=row.insertCell(3);
+						var cell4=row.insertCell(4);
+
+						var cell5=row.insertCell(5);
+						var cell6=row.insertCell(6);
+						var cell7=row.insertCell(7);
+						var cell8=row.insertCell(8);
+						var cell9=row.insertCell(9);
+
+						var cell10=row.insertCell(10);
+						var cell11=row.insertCell(11);
+						var cell12=row.insertCell(12);
+						var cell13=row.insertCell(13);
+						var cell14=row.insertCell(14);
+
+						var cell15=row.insertCell(15);
+						var cell16=row.insertCell(16);
+						var cell17=row.insertCell(17);
+						var cell18=row.insertCell(18);
+						var cell19=row.insertCell(19);
+
+						var cell20=row.insertCell(20);
+						var cell21=row.insertCell(21);
+						// var cell22 = row.insertCell(22);
+
+						let strbutton=" <a  onclick=\"getByIdSys_Role_Permission('"+data.RolePermissionId+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+							"<i class=\"fas fa-pencil-alt\"></i>"+
+							"</a> "+
+							" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-idSys_Role_Permission=\""+data.RolePermissionId+"\" title=\"Delete\"  onclick=\"deleteByIdSys_Role_Permission(this,"+data.RolePermissionId+",'"+data.Description+"')\"> "+
+							" <i class=\"fas fa-trash-alt\"></i> "+
+							" </ button > ";
+						cell0.innerHTML=strbutton;
+						cell1.innerHTML=data.Functions;
+						cell2.innerHTML=data.Description;
+
+						if(data.FullAuthority==true)
+							data.FullAuthority="<mark>"+data.FullAuthority+"</mark>";
+
+						if(data.Addnew==true)
+							data.Addnew="<mark>"+data.Addnew+"</mark>";
+
+						if(data.Updates==true)
+							data.Updates="<mark>"+data.Updates+"</mark>";
+
+						if(data.ReadOnly==true)
+							data.ReadOnly="<mark>"+data.ReadOnly+"</mark>";
+
+						if(data.FullOfYourself==true)
+							data.FullOfYourself="<mark>"+data.FullOfYourself+"</mark>";
+
+						if(data.Permission1==true)
+							data.Permission1="<mark>"+data.Permission1+"</mark>";
+
+						if(data.Permission2==true)
+							data.Permission2="<mark>"+data.Permission2+"</mark>";
+
+						if(data.Permission3==true)
+							data.Permission3="<mark>"+data.Permission3+"</mark>";
+
+						if(data.Permission4==true)
+							data.Permission4="<mark>"+data.Permission4+"</mark>";
+
+						if(data.Permission5==true)
+							data.Permission5="<mark>"+data.Permission5+"</mark>";
+
+						if(data.Permission6==true)
+							data.Permission6="<mark>"+data.Permission6+"</mark>";
+
+						if(data.Permission7==true)
+							data.Permission7="<mark>"+data.Permission7+"</mark>";
+
+						if(data.Permission8==true)
+							data.Permission8="<mark>"+data.Permission8+"</mark>";
+
+						if(data.Permission9==true)
+							data.Permission9="<mark>"+data.Permission9+"</mark>";
+
+						if(data.Permission10==true)
+							data.Permission10="<mark>"+data.Permission10+"</mark>";
+
+						cell3.innerHTML=data.FullAuthority;
+						cell4.innerHTML=data.Addnew;
+
+						cell5.innerHTML=data.Updates;
+						cell6.innerHTML=data.ReadOnly;
+						cell7.innerHTML=data.FullOfYourself;
+						cell8.innerHTML=data.Permission1;
+						cell9.innerHTML=data.Permission2;
+
+						cell10.innerHTML=data.Permission3;
+						cell11.innerHTML=data.Permission4;
+						cell12.innerHTML=data.Permission5;
+						cell13.innerHTML=data.Permission6;
+						cell14.innerHTML=data.Permission7;
+
+						cell15.innerHTML=data.Permission8;
+						cell16.innerHTML=data.Permission9;
+						cell17.innerHTML=data.Permission10;
+
+						cell18.innerHTML=data.User_Name_Created;
+						cell19.innerHTML=dateToStringMMMHH(data.DateTime_Created,'-');
+
+						cell20.innerHTML=data.User_Name_Modified;
+						cell21.innerHTML=dateToStringMMMHH(data.DateTime_Modified,'-');
+
+
+					});
+				}
+
+				$("#numberItemPerPage").change(function() {
+					setNumberItemPerPage();
+				});
+
+				// createDataForDropdownListsSys_Role_Permission();
+				// function createDataForDropdownListsSys_Role_Permission() {
+				// 	var strCatalogue = $('#listDataCatalogue').val();
+				// 	arrCatalogue = JSON.parse(strCatalogue);
+				// 	createDataForDropdown(arrCatalogue[0], 'Functions', '', '', '', '-- Chose --');
+				// }
+
+				// closeAllDropdownSys_Role_Permission();
+				// function closeAllDropdownSys_Role_Permission() {
+				// 	var DivConten = document.getElementById('DivConten');
+				// 	DivConten.hidden = true;
+
+				// }
+
+				function getByIdSys_Role_Permission(Id) {
+					var link=$('#linkPrefix').val()+'getByIdSys_Role_Permission/'+Id;
+					$.ajax({
+						type: 'GET',
+						url: link,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							if(success==true) {
+								showDataToFormSys_Role_Permission(resultdata.data);
+							}
+						},
+						failure: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+						error: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+					});
+				}
+
+				function showDataToFormSys_Role_Permission(data) {
+
+					try {
+						$('#btnUpdateSys_Role_Permission').prop('hidden',false);
+						$('#RolePermissionIdSys_Role_PermissionHidden').val(data.RolePermissionId);
+						$('#RolePermissionId').val(data.RolePermissionId);
+						$('#Functions').val(data.Functions);
+						$('#Description').val(data.Functions)
+						if((data.FullAuthority=="true")||(data.FullAuthority==true)||(data.FullAuthority=="active")||(data.FullAuthority=="yes")||(data.FullAuthority=="1"))
+							$("#FullAuthority").prop("checked",true);
+						else $("#FullAuthority").prop("checked",false);
+						if((data.Addnew=="true")||(data.Addnew==true)||(data.Addnew=="active")||(data.Addnew=="yes")||(data.Addnew=="1"))
+							$("#Addnew").prop("checked",true);
+						else $("#Addnew").prop("checked",false);
+						if((data.Updates=="true")||(data.Updates==true)||(data.Updates=="active")||(data.Updates=="yes")||(data.Updates=="1"))
+							$("#Updates").prop("checked",true);
+						else $("#Updates").prop("checked",false);
+						if((data.ReadOnly=="true")||(data.ReadOnly==true)||(data.ReadOnly=="active")||(data.ReadOnly=="yes")||(data.ReadOnly=="1"))
+							$("#ReadOnly").prop("checked",true);
+						else $("#ReadOnly").prop("checked",false);
+						if((data.FullOfYourself=="true")||(data.FullOfYourself==true)||(data.FullOfYourself=="active")||(data.FullOfYourself=="yes")||(data.FullOfYourself=="1"))
+							$("#FullOfYourself").prop("checked",true);
+						else $("#FullOfYourself").prop("checked",false);
+						if((data.Permission1=="true")||(data.Permission1==true)||(data.Permission1=="active")||(data.Permission1=="yes")||(data.Permission1=="1"))
+							$("#Permission1").prop("checked",true);
+						else $("#Permission1").prop("checked",false);
+						if((data.Permission2=="true")||(data.Permission2==true)||(data.Permission2=="active")||(data.Permission2=="yes")||(data.Permission2=="1"))
+							$("#Permission2").prop("checked",true);
+						else $("#Permission2").prop("checked",false);
+						if((data.Permission3=="true")||(data.Permission3==true)||(data.Permission3=="active")||(data.Permission3=="yes")||(data.Permission3=="1"))
+							$("#Permission3").prop("checked",true);
+						else $("#Permission3").prop("checked",false);
+						if((data.Permission4=="true")||(data.Permission4==true)||(data.Permission4=="active")||(data.Permission4=="yes")||(data.Permission4=="1"))
+							$("#Permission4").prop("checked",true);
+						else $("#Permission4").prop("checked",false);
+						if((data.Permission5=="true")||(data.Permission5==true)||(data.Permission5=="active")||(data.Permission5=="yes")||(data.Permission5=="1"))
+							$("#Permission5").prop("checked",true);
+						else $("#Permission5").prop("checked",false);
+						if((data.Permission6=="true")||(data.Permission6==true)||(data.Permission6=="active")||(data.Permission6=="yes")||(data.Permission6=="1"))
+							$("#Permission6").prop("checked",true);
+						else $("#Permission6").prop("checked",false);
+						if((data.Permission7=="true")||(data.Permission7==true)||(data.Permission7=="active")||(data.Permission7=="yes")||(data.Permission7=="1"))
+							$("#Permission7").prop("checked",true);
+						else $("#Permission7").prop("checked",false);
+						if((data.Permission8=="true")||(data.Permission8==true)||(data.Permission8=="active")||(data.Permission8=="yes")||(data.Permission8=="1"))
+							$("#Permission8").prop("checked",true);
+						else $("#Permission8").prop("checked",false);
+						if((data.Permission9=="true")||(data.Permission9==true)||(data.Permission9=="active")||(data.Permission9=="yes")||(data.Permission9=="1"))
+							$("#Permission9").prop("checked",true);
+						else $("#Permission9").prop("checked",false);
+						if((data.Permission10=="true")||(data.Permission10==true)||(data.Permission10=="active")||(data.Permission10=="yes")||(data.Permission10=="1"))
+							$("#Permission10").prop("checked",true);
+						else $("#Permission10").prop("checked",false);
+					}
+					catch(error) {}
+				}
+
+				function clearFormSys_Role_Permission() {
+					try {
+						$('#RolePermissionIdSys_Role_PermissionHidden').val('');
+						$('#RolePermissionId').val('');
+						$('#Functions').val('');
+						$("#FullAuthority").prop("checked",false);
+						$("#Addnew").prop("checked",false);
+						$("#Updates").prop("checked",false);
+						$("#ReadOnly").prop("checked",false);
+						$("#FullOfYourself").prop("checked",false);
+						$("#Permission1").prop("checked",false);
+						$("#Permission2").prop("checked",false);
+						$("#Permission3").prop("checked",false);
+						$("#Permission4").prop("checked",false);
+						$("#Permission5").prop("checked",false);
+						$("#Permission6").prop("checked",false);
+						$("#Permission7").prop("checked",false);
+						$("#Permission8").prop("checked",false);
+						$("#Permission9").prop("checked",false);
+						$("#Permission10").prop("checked",false);
+					}
+					catch(error) {}
+				}
+
+				$('#btnSaveSys_Role_Permission').click(function() {
+					$(this).prop('disabled',true);
+					saveInsertSys_Role_Permission();
+					$(this).prop('disabled',false);
+				});
+
+				function getDataFormSys_Role_Permission() {
+					if(($('#Functions').val().length<1)||($('#Functions').val().length>50)) {
+						var message=formatMessage(language.Functions+": "+language.Message_Invalid_Functions,'1','50');
+						alert(message);
+						return false;
+					}
+					return {
+						'RoleId': $('#Id').val(),
+						'RolePermissionIdHidden': $('#RolePermissionIdHidden').val(),
+						'RolePermissionId': $('#RolePermissionId').val(),
+						'Functions': $('#Functions').val(),
+						'FullAuthority': $('#FullAuthority').is(":checked"),
+						'Addnew': $('#Addnew').is(":checked"),
+						'Updates': $('#Updates').is(":checked"),
+						'ReadOnly': $('#ReadOnly').is(":checked"),
+						'FullOfYourself': $('#FullOfYourself').is(":checked"),
+						'Permission1': $('#Permission1').is(":checked"),
+						'Permission2': $('#Permission2').is(":checked"),
+						'Permission3': $('#Permission3').is(":checked"),
+						'Permission4': $('#Permission4').is(":checked"),
+						'Permission5': $('#Permission5').is(":checked"),
+						'Permission6': $('#Permission6').is(":checked"),
+						'Permission7': $('#Permission7').is(":checked"),
+						'Permission8': $('#Permission8').is(":checked"),
+						'Permission9': $('#Permission9').is(":checked"),
+						'Permission10': $('#Permission10').is(":checked"),
+					}
+				}
+
+				function saveInsertSys_Role_Permission() {
+					let data=getDataFormSys_Role_Permission();
+					if(data==false) {
+						$('#btnSave').prop('disabled',false);
+						return false;
+					}
+					var link=$('#linkPrefix').val()+'saveSys_Role_Permission';
+					$.ajax({
+						type: 'post',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false))
+								showNoticeDanger(language.Message_AddNewError+' ('+response.message+')');
+							else if((success!=true)&&(success!='true'))
+								showNoticeDanger(result.message);
+							else {
+								insertRowSys_Role_Permission(result.data);
+								clearFormSys_Role_Permission();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_AddNewError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_AddNewError);
+						},
+					});
+					$('#btnSave').prop('disabled',false);
+				}
+
+				function insertRowSys_Role_Permission(data) {
+					var Description=$('#Description').val();
+					showNoticeSuccess(language.Message_AddNewRolePermissionSuccess);
+					var table=document.getElementById("tableSys_Role_Permission");
+					var row=table.insertRow(1);
+					var cell0=row.insertCell(0);
+					var cell1=row.insertCell(1);
+					var cell2=row.insertCell(2);
+					var cell3=row.insertCell(3);
+					var cell4=row.insertCell(4);
+
+					var cell5=row.insertCell(5);
+					var cell6=row.insertCell(6);
+					var cell7=row.insertCell(7);
+					var cell8=row.insertCell(8);
+					var cell9=row.insertCell(9);
+
+					var cell10=row.insertCell(10);
+					var cell11=row.insertCell(11);
+					var cell12=row.insertCell(12);
+					var cell13=row.insertCell(13);
+					var cell14=row.insertCell(14);
+
+					var cell15=row.insertCell(15);
+					var cell16=row.insertCell(16);
+					var cell17=row.insertCell(17);
+					var cell18=row.insertCell(18);
+					var cell19=row.insertCell(19);
+
+					var cell20=row.insertCell(20);
+					var cell21=row.insertCell(21);
+					// var cell22 = row.insertCell(22);
+
+					if(data.FullAuthority=="true")
+						data.FullAuthority="<mark>"+data.FullAuthority+"</mark>";
+
+					if(data.Addnew=="true")
+						data.Addnew="<mark>"+data.Addnew+"</mark>";
+
+					if(data.Updates=="true")
+						data.Updates="<mark>"+data.Updates+"</mark>";
+
+					if(data.ReadOnly=="true")
+						data.ReadOnly="<mark>"+data.ReadOnly+"</mark>";
+
+					if(data.FullOfYourself=="true")
+						data.FullOfYourself="<mark>"+data.FullOfYourself+"</mark>";
+
+					if(data.Permission1=="true")
+						data.Permission1="<mark>"+data.Permission1+"</mark>";
+
+					if(data.Permission2=="true")
+						data.Permission2="<mark>"+data.Permission2+"</mark>";
+
+					if(data.Permission3=="true")
+						data.Permission3="<mark>"+data.Permission3+"</mark>";
+
+					if(data.Permission4=="true")
+						data.Permission4="<mark>"+data.Permission4+"</mark>";
+
+					if(data.Permission5=="true")
+						data.Permission5="<mark>"+data.Permission5+"</mark>";
+
+					if(data.Permission6=="true")
+						data.Permission6="<mark>"+data.Permission6+"</mark>";
+
+					if(data.Permission7=="true")
+						data.Permission7="<mark>"+data.Permission7+"</mark>";
+
+					if(data.Permission8=="true")
+						data.Permission8="<mark>"+data.Permission8+"</mark>";
+
+					if(data.Permission9=="true")
+						data.Permission9="<mark>"+data.Permission9+"</mark>";
+
+					if(data.Permission10=="true")
+						data.Permission10="<mark>"+data.Permission10+"</mark>";
+
+					let strbutton=" <a  onclick=\"getByIdSys_Role_Permission('"+data.RolePermissionId+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						"<i class=\"fas fa-pencil-alt\"></i>"+
+						"</a> "+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-idSys_Role_Permission=\""+data.RolePermissionId+"\" title=\"Delete\"  onclick=\"deleteByIdSys_Role_Permission(this,"+data.RolePermissionId+",'"+Description+"')\"> "+
+						" <i class=\"fas fa-trash-alt\"></i> "+
+						" </ button > ";
+					cell0.innerHTML=strbutton;
+					cell1.innerHTML=data.Functions;
+					cell2.innerHTML=Description;
+					cell3.innerHTML=data.FullAuthority;
+					cell4.innerHTML=data.Addnew;
+
+					cell5.innerHTML=data.Updates;
+					cell6.innerHTML=data.ReadOnly;
+					cell7.innerHTML=data.FullOfYourself;
+					cell8.innerHTML=data.Permission1;
+					cell9.innerHTML=data.Permission2;
+
+					cell10.innerHTML=data.Permission3;
+					cell11.innerHTML=data.Permission4;
+					cell12.innerHTML=data.Permission5;
+					cell13.innerHTML=data.Permission6;
+					cell14.innerHTML=data.Permission7;
+
+					cell15.innerHTML=data.Permission8;
+					cell16.innerHTML=data.Permission9;
+					cell17.innerHTML=data.Permission10;
+
+					cell18.innerHTML=data.User_Name_Created;
+					cell19.innerHTML=dateToStringMMMHH(data.DateTime_Created,'-');
+
+					cell20.innerHTML=data.User_Name_Modified;
+					cell21.innerHTML=dateToStringMMMHH(data.DateTime_Modified,'-');
+				}
+
+				$('#btnUpdateSys_Role_Permission').click(function() {
+					$(this).prop('disabled',true);
+					saveUpdateSys_Role_Permission();
+					$(this).prop('disabled',false);
+				});
+
+				function saveUpdateSys_Role_Permission() {
+					let data=getDataFormSys_Role_Permission();
+					if(data==false) {
+						$('#btnUpdateSys_Role_Permission').prop('disabled',false);
+						return false;
+					}
+					if(data.RolePermissionIdSys_Role_PermissionHidden=="") {
+						$('#btnUpdateSys_Role_Permission').prop('disabled',false);
+						showNoticeDanger(language.Message_HaveNotSelectedItemUpdate);
+						return false;
+					}
+					var link=$('#linkPrefix').val()+'updateSys_Role_Permission';
+					$.ajax({
+						type: 'put',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_UpdateError);
+								return false;
+							}
+							else if((success!=true)&&(success!='true')) {
+								showNoticeDanger(result.message);
+								return false;
+							}
+							else {
+								updateRowSys_Role_Permission(result.data);
+								clearFormSys_Role_Permission();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						}
+					});
+					$('#btnUpdateSys_Role_Permission').prop('disabled',false);
+				}
+
+				function updateRowSys_Role_Permission(data) {
+					showNoticeSuccess(language.Message_UpdateRolePermissionSuccess);
+					var Description=$('#Description').val();
+					var row=$("#tableSys_Role_Permission button[data-idSys_Role_Permission='"+data.RolePermissionId+"']").parents("tr")[0];
+					var tr=`<td> <a onclick="getByIdSys_Role_Permission('${data.RolePermissionId}')" type="button" class="rounded-circle btn btn-sm btn-info" title="Edit"><i class="fas fa-pencil-alt"></i></a>  <button type="button" class="rounded-circle btn btn-sm btn-danger" data-idSys_Role_Permission="${data.RolePermissionId}" title="Delete" onclick="deleteByIdSys_Role_Permission(this,${data.RolePermissionId},'${Description}')">  <i class="fas fa-trash-alt"></i>  <!-- button --> </button></td>`
+
+					tr+="<td class=\"text-center\">"+data.Functions+"</td>";
+					tr+="<td class=\"text-center\">"+Description+"</td>";
+					if(data.FullAuthority=="true")
+						data.FullAuthority="<mark>"+data.FullAuthority+"</mark>";
+
+					if(data.Addnew=="true")
+						data.Addnew="<mark>"+data.Addnew+"</mark>";
+
+					if(data.Updates=="true")
+						data.Updates="<mark>"+data.Updates+"</mark>";
+
+					if(data.ReadOnly=="true")
+						data.ReadOnly="<mark>"+data.ReadOnly+"</mark>";
+
+					if(data.FullOfYourself=="true")
+						data.FullOfYourself="<mark>"+data.FullOfYourself+"</mark>";
+
+					if(data.Permission1=="true")
+						data.Permission1="<mark>"+data.Permission1+"</mark>";
+
+					if(data.Permission2=="true")
+						data.Permission2="<mark>"+data.Permission2+"</mark>";
+
+					if(data.Permission3=="true")
+						data.Permission3="<mark>"+data.Permission3+"</mark>";
+
+					if(data.Permission4=="true")
+						data.Permission4="<mark>"+data.Permission4+"</mark>";
+
+					if(data.Permission5=="true")
+						data.Permission5="<mark>"+data.Permission5+"</mark>";
+
+					if(data.Permission6=="true")
+						data.Permission6="<mark>"+data.Permission6+"</mark>";
+
+					if(data.Permission7=="true")
+						data.Permission7="<mark>"+data.Permission7+"</mark>";
+
+					if(data.Permission8=="true")
+						data.Permission8="<mark>"+data.Permission8+"</mark>";
+
+					if(data.Permission9=="true")
+						data.Permission9="<mark>"+data.Permission9+"</mark>";
+
+					if(data.Permission10=="true")
+						data.Permission10="<mark>"+data.Permission10+"</mark>";
+
+					tr+="<td class=\"text-center\">"+data.FullAuthority+"</td>";
+					tr+="<td class=\"text-center\">"+data.Addnew+"</td>";
+					tr+="<td class=\"text-center\">"+data.Updates+"</td>";
+					tr+="<td class=\"text-center\">"+data.ReadOnly+"</td>";
+					tr+="<td class=\"text-center\">"+data.FullOfYourself+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission1+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission2+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission3+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission4+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission5+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission6+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission7+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission8+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission9+"</td>";
+					tr+="<td class=\"text-center\">"+data.Permission10+"</td>";
+					tr+="<td class=\"text-center\">#</td>";
+					tr+="<td class=\"text-center\">#</td>";
+
+					tr+="<td class=\"text-center\">"+data.User_Name_Modified+"</td>";
+					tr+="<td class=\"text-center\">"+dateToStringMMMHH(data.DateTime_Modified,'-')+"</td>";
+					$(row).after(tr);
+					$(row).remove();
+				}
+				function deleteByIdSys_Role_Permission(row,IdObject,Functions) {
+					let message=language.Message_DoYouWantToDeleteById+' '+Functions+'?';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={
+						'RolePermissionId': IdObject
+					};
+					var link=$('#linkPrefix').val()+'deleteByIdSys_Role_Permission';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							var message=resultdata.message;
+							var notice={};
+							if((success=='true')||(success==true)) {
+								showNoticeSuccess(language.Message_DeleteSuccess);
+								var i=row.parentNode.parentNode.rowIndex;
+								document.getElementById("tableSys_Role_Permission").deleteRow(i);
+								return true;
+							}
+							else if(message.length>10) {
+								showNoticeDanger(message);
+								return false;
+							}
+							else {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+
+
+				function displayDataToTable(datas) {
+
+					var table=document.getElementById("tableSys_Role");
+					var lengthtable=table.rows.length-1;
+					for(var n=lengthtable;n>0;n--) {
+						table.deleteRow(n);
+					}
+					var length=datas.length;
+					if(length<1) {
+						showNoticeDanger(language.Message_NotFoundData);
+						return false;
+					}
+
+					datas.forEach(function(data) {
+						var row=table.insertRow(1);
+						var cell0=row.insertCell(0);
+						var cell1=row.insertCell(1);
+						var cell2=row.insertCell(2);
+						var cell3=row.insertCell(3);
+						var cell4=row.insertCell(4);
+						var cell5=row.insertCell(5);
+						var cell6=row.insertCell(6);
+						var cell7=row.insertCell(7);
+						var cell8=row.insertCell(8);
+						let check=`<div class="custom-control custom-checkbox"> 
+<input class="custom-control-input" type="checkbox" name="chkListData" id="${data.Id}" value="${data.Id}">
+<label for="${data.Id}" class="custom-control-label"></label>
+</div>`;
+						cell0.innerHTML=check;
+						cell1.innerHTML=data.Name;
+						cell2.innerHTML=data.NumericalOrder;
+						cell3.innerHTML=data.Status;
+						cell4.innerHTML=data.User_Name_Created;
+						cell5.innerHTML=dateToStringMMMHH(data.DateTime_Created,'-');
+						cell6.innerHTML=data.User_Name_Modified;
+						cell7.innerHTML=dateToStringMMMHH(data.DateTime_Modified,'-');
+						let strbutton=" <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+							"<i class=\"fas fa-pencil-alt\"></i>"+
+							"</a> "+
+							" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,"+data.Id+", '"+data.Name+"')\">";
+						strbutton+=" <i class=\"fas fa-trash-alt\"></i> ";
+						strbutton+=" </ button > ";
+						cell8.innerHTML=strbutton;
+					});
+				}
+				function setUpdateButtonStatus(statusUpdate) {
+					$('#btnSave').prop('hidden',statusUpdate);
+					$('#btnUpdate').prop('hidden',!statusUpdate);
+				}
+
+				function getLanguage() {
+					var languageString=$('#sysLanguage').val();
+					language=JSON.parse(languageString);
+				}
+
+				createDataForDropdownLists();
+				function createDataForDropdownLists() {
+					var strCatalogue=$('#listDataCatalogue').val();
+					arrCatalogue=JSON.parse(strCatalogue);
+					console.log(arrCatalogue);
+					createDataForDropdown(arrCatalogue[0],'Functions','FunctionName','Description','Description','-- Chose --',{showId: false});
+					//FunctionName
+				}
+
+				closeAllDropdown();
+				function closeAllDropdown() {
+					var DivContenDescription=document.getElementById('DivContenDescription');
+					DivContenDescription.hidden=true;
+				}
+				$('#btnSaveRolePermission').click(function() {
+					$(this).prop('disabled',true);
+					$('#btnUpdateRolePermission').prop('hidden',true);
+					saveRolePermission();
+					$(this).prop('disabled',false);
+				});
+
+				$('#btnUpdateRolePermission').click(function() {
+					$(this).prop('disabled',true);
+					updateRolePermission();
+					$(this).prop('disabled',false);
+				});
+
+				function setInterfaceText() {
+					$("#pageTitle").html(language.TitlePage);
+					$("#labId").text(language.Id);
+					$("#labName").text(language.Name);
+					$("#labNumericalOrder").text(language.NumericalOrder);
+					$("#labStatus").text(language.Status);
+					$("#labId_tb").text(language.Id);
+					$("#labName_tb").text(language.Name);
+					$("#labNumericalOrder_tb").text(language.NumericalOrder);
+					$("#labStatus_tb").text(language.Status);
+				}
+
+
+				function getById(Id) {
+					var link=$('#linkPrefix').val()+'getById/'+Id;
+					$.ajax({
+						type: 'GET',
+						url: link,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							if(success==true) {
+								showDataToForm(resultdata.data);
+								//rolePermission = resultdata.rolePermission;
+								displayDataToTableSys_Role_Permission(resultdata.rolePermission);
+							}
+						},
+						failure: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+						error: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+					});
+				}
+
+				function showDataToForm(data) {
+
+					try {
+						window.scrollTo(0,120);
+						setUpdateButtonStatus(true);
+						$('#IdHidden').val(data.Id);
+						$('#Id').val(data.Id);
+						$('#Name').val(data.Name);
+						$('#NumericalOrder').val(data.NumericalOrder);
+						if((data.Status=="true")||(data.Status==true)||(data.Status=="active")||(data.Status=="yes")||(data.Status=="1"))
+							$("#Status").prop("checked",true);
+						else $("#Status").prop("checked",false);
+					}
+					catch(error) {}
+				}
+
+				function clearForm() {
+					try {
+						$('#IdHidden').val('');
+						setUpdateButtonStatus(false)
+						$('#Id').val('');
+						$('#Name').val('');
+						$('#NumericalOrder').val('');
+						$("#Status").prop("checked",false);
+					}
+					catch(error) {}
+				}
+
+				$('#btnSearchPost').click(function() {
+					$(this).prop('disabled',true);
+					getContentPages(1);
+				});
+
+				function getContentPages(page) {
+					var sortStorage=getSortType(linkPrefix);
+					let data={
+						'Page': page,
+						'Name': $('#Name').val(),
+						numberItemPerPage: $('#numberItemPerPage').val()
+					}
+					var link=$('#linkPrefix').val()+'search';
+					$.ajax({
+						type: 'POST',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							$('#btnSearchPost').prop('disabled',false);
+							let result=resultdata.result;
+							displayDataToTable(result);
+							var linkPrefix=$('#linkPrefix').val();
+							let params=resultdata.params;
+							paginationHelper(params.pagination,"Sys_Role","","",linkPrefix,"paginationSys_Role");
+
+							if(params.pagination.totalItems>0) {
+								var message=language.Message_Find+params.pagination.totalItems+language.Message_Words_records;
+								showNoticeSuccess(message);
+							}
+						},
+						failure: function(response) {
+							$('#btnSearchPost').prop('disabled',false);
+							showNoticeDanger('Search Error');
+						},
+						error: function(response) {
+							$('#btnSearchPost').prop('disabled',false);
+							showNoticeDanger('Search Error');
+						}
+					});
+					$('#btnSearchPost').prop('disabled',false);
+				}
+
+				$('#btnSave').click(function() {
+					$(this).prop('disabled',true);
+					saveInsert();
+				});
+
+				$('#btnSaveAs').click(function() {
+					$(this).prop('disabled',true);
+					$('#IdHidden').val('');
+					$('#Id').val('');
+					saveInsert();
+				});
+
+				function getDataForm() {
+					if(($('#Name').val().length<1)||($('#Name').val().length>50)) {
+						var message=formatMessage(language.Name+": "+language.Message_Invalid_Name,'1','50');
+						alert(message);
+						return false;
+					}
+					return {
+						'IdHidden': $('#IdHidden').val(),
+						'Id': $('#Id').val(),
+						'Name': $('#Name').val(),
+						'NumericalOrder': $('#NumericalOrder').val(),
+						'Status': $('#Status').is(":checked"),
+					}
+				}
+
+				function saveInsert() {
+					let data=getDataForm();
+					if(data==false) {
+						$('#btnSave').prop('disabled',false);
+						return false;
+					}
+					var link=$('#linkPrefix').val()+'save';
+					$.ajax({
+						type: 'post',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false))
+								showNoticeDanger(language.Message_AddNewError+' ('+response.message+')');
+							else if((success!=true)&&(success!='true'))
+								showNoticeDanger(result.message);
+							else {
+								insertRow(result.data);
+								clearForm();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_AddNewError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_AddNewError);
+						},
+					});
+					$('#btnSave').prop('disabled',false);
+				}
+
+
+
+				function insertRow(data) {
+					showNoticeSuccess(language.Message_AddNewSuccess);
+					var table=document.getElementById("tableSys_Role");
+					var row=table.insertRow(1);
+					var cell0=row.insertCell(0);
+					var cell1=row.insertCell(1);
+					var cell2=row.insertCell(2);
+					var cell3=row.insertCell(3);
+					var cell4=row.insertCell(4);
+					var cell5=row.insertCell(5);
+					var cell6=row.insertCell(6);
+					var cell7=row.insertCell(7);
+					var cell8=row.insertCell(8);
+					let check=`<div class="custom-control custom-checkbox"> 
+<input class="custom-control-input" type="checkbox" name="chkListData" id="${data.Id}" value="${data.Id}">
+<label for="${data.Id}" class="custom-control-label"></label>
+</div>`;
+					cell0.innerHTML=check;
+					cell1.innerHTML=data.Name;
+					cell2.innerHTML=data.NumericalOrder;
+					cell3.innerHTML=data.Status;
+					cell4.innerHTML=data.User_Name_Created;
+					cell5.innerHTML=dateToStringMMMHH(data.DateTime_Created,'-');
+					cell6.innerHTML=data.User_Name_Modified;
+					cell7.innerHTML=dateToStringMMMHH(data.DateTime_Modified,'-');
+					let strbutton=" <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						"<i class=\"fas fa-pencil-alt\"></i>"+
+						"</a> "+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,"+data.Id+", '"+data.Name+"')\">";
+					strbutton+=" <i class=\"fas fa-trash-alt\"></i> ";
+					strbutton+=" </ button > ";
+					cell8.innerHTML=strbutton;
+				}
+
+				$('#btnUpdate').click(function() {
+					$(this).prop('disabled',true);
+					saveUpdate();
+				});
+
+				function saveUpdate() {
+					let data=getDataForm();
+					if(data==false) {
+						$('#btnUpdate').prop('disabled',false);
+						return false;
+					}
+					if(data.IdHidden=="") {
+						$('#btnUpdate').prop('disabled',false);
+						showNoticeDanger(language.Message_HaveNotSelectedItemUpdate);
+						return false;
+					}
+					var link=$('#linkPrefix').val()+'update';
+					$.ajax({
+						type: 'put',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_UpdateError);
+								return false;
+							}
+							else if((success!=true)&&(success!='true')) {
+								showNoticeDanger(result.message);
+								return false;
+							}
+							else {
+								updateRow(result.data);
+								clearForm();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						}
+					});
+					$('#btnUpdate').prop('disabled',false);
+				}
+
+				function updateRow(data) {
+					showNoticeSuccess(language.Message_UpdateSuccess);
+					var row=$("#tableSys_Role button[data-id='"+data.Id+"']").parents("tr")[0];
+					var tr="<tr>"+
+						"<td class=\"text-center\">"+
+						"<div class=\"custom-control custom-checkbox\">"+
+						"<input class=\"custom-control-input\" type=\"checkbox\" name=\"chkListData\" id=\""+data.Id+"\" value=\""+data.Id+"\"> "+
+						"<label for=\""+data.Id+"\" class=\"custom-control-label\"></label> "+
+						"</div>"+
+						"</td>";
+					tr+="<td class=\"text-center\">"+data.Name+"</td>";
+					tr+="<td class=\"text-center\">"+data.NumericalOrder+"</td>";
+					tr+="<td class=\"text-center\">"+data.Status+"</td>";
+					tr+="<td class=\"text-center\">#</td>";
+					tr+="<td class=\"text-center\">#</td>";
+					tr+="<td class=\"text-center\">"+data.User_Name_Modified+"</td>";
+					tr+="<td class=\"text-center\">"+dateToStringMMMHH(data.DateTime_Modified,'-')+"</td>";
+
+					tr+="<td class=\"text-center\">"+
+						" <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						" <i class=\"fas fa-pencil-alt\"></i>"+
+						" </a>"+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,'"+data.Id+"','"+data.Name+"')\">"+
+						" <i class=\"fas fa-trash-alt\"></i> "+
+						" </button> "+
+						" </td>"+
+						" </tr>";
+					$(row).after(tr);
+					$(row).remove();
+				}
+
+
+
+
+
+
+
+
+				function deleteById(row,IdObject,Name) {
+					let message=language.Message_DoYouWantToDeleteById+' '+Name+'?';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={
+						'Id': IdObject
+					};
+					var link=$('#linkPrefix').val()+'deleteById';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							var message=resultdata.message;
+							var notice={};
+							if((success=='true')||(success==true)) {
+								showNoticeSuccess(language.Message_DeleteSuccess);
+								var i=row.parentNode.parentNode.rowIndex;
+								document.getElementById("tableSys_Role").deleteRow(i);
+								return true;
+							}
+							else if(message.length>10) {
+								showNoticeDanger(message);
+								return false;
+							}
+							else {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+				$('#btnDelete').click(function() {
+					$(this).prop('disabled',true);
+					deleteList();
+					$(this).prop('disabled',false);
+				});
+				function deleteList() {
+					var arrayId=[];
+					var listId=" ";
+					$("input:checkbox[name=chkListData]:checked").each(function() {
+						arrayId.push($(this).val());
+						listId+=$(this).val()+' ';
+					});
+					let message=language.Message_DoYouWantToDeleteInTheList+' '+listId+'?';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={arrayId};
+					var link=$('#linkPrefix').val()+'deleteList';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var result=resultdata.result;
+							var success=result.success;
+							var message=result.message;
+							if((success=='true')||(success==true)) {
+								let deleteSuccess=result.deleteSuccess;
+								let deleteError=result.deleteError;
+								if(deleteSuccess.length>0) {
+									let message=language.Message_DeleteSuccess;
+									message+=" "+deleteSuccess.toString();
+									if(deleteError.length>0) {
+										message+=" \n"+language.Message_DeleteFail+" "+deleteError.toString();
+									}
+									showNoticeSuccess(message);
+									deleteRows(arrayId,"tableSys_Role");
+									return true;
+								}
+								else if(deleteError.length>0) {
+									let message=language.Message_DeleteFail+" "+deleteError.toString();
+									showNoticeDanger(message);
+								}
+								else {
+									showNoticeDanger(language.Message_DeleteFail);
+								}
+							}
+							else if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+				$('#btnExport').click(function() {
+					$(this).prop('disabled',true);
+					exportData();
+					$(this).prop('disabled',false);
+				});
+
+				function exportData() {
+					let data={
+						'Name': $('#Name').val(),
+					}
+					var link=$('#linkPrefix').val()+'exportData';
+					$.ajax({
+						type: 'post',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							$('#btnExport').prop('disabled',false);
+							let result=resultdata.result;
+							showNoticeSuccess(language.Message_CompletedGetData);
+							ExportToExcel(result);
+						},
+						failure: function(response) {
+							$('#btnExport').prop('disabled',false);
+							showNoticeDanger('Export Error');
+						},
+						error: function(response) {
+							$('#btnExport').prop('disabled',false);
+							showNoticeDanger('Export Error');
+						}
+					});
+					$('#btnExport').prop('disabled',false);
+				}
+
+				function ExportToExcel(datas) {
+					let itemCount=datas.length;
+					if(itemCount>1000) {
+						showNoticeDanger(language.Message_WarningWhenExportingDataTooMuch);
+					}
+					if(itemCount<1) {
+						showNoticeDanger(language.Message_NotFoundData);
+					}
+					var strTable='<style type="text/css">';
+					strTable+=' .Border { ';
+					strTable+='         color: windowtext; ';
+					strTable+='         font-size: 11.0pt; ';
+					strTable+='         word-break:break-all;';
+					strTable+='         font-style: normal; ';
+					strTable+='         text-decoration: none; ';
+					strTable+='         font-family: "Times New Roman", serif; ';
+					strTable+='         text-align: left; ';
+					strTable+='         vertical-align: bottom;';
+					strTable+='         border-left: .5pt solid windowtext; ';
+					strTable+='         border-right: .5pt solid windowtext; ';
+					strTable+='         border-top: .5pt solid windowtext; ';
+					strTable+='         border-bottom: .5pt solid windowtext; ';
+					strTable+='         padding-left: 1px; ';
+					strTable+='         padding-right: 1px; ';
+					strTable+='         padding-top: 1px; ';
+					strTable+='     } ';
+
+					strTable+=' .BorderHeader { ';
+					strTable+='        color: white; ';
+					strTable+='         background-color:#0026ff; ';
+					strTable+='        font-size: 11.0pt; ';
+					strTable+='        text-align: center; ';
+					strTable+='        font-style: normal; ';
+					strTable+='        text-decoration: none; ';
+					strTable+='        font-family: "Times New Roman", serif; ';
+					strTable+='        vertical-align: bottom;';
+					strTable+='        border-left: .5pt solid windowtext; ';
+					strTable+='        border-right: .5pt solid windowtext; ';
+					strTable+='        border-top: .5pt solid windowtext; ';
+					strTable+='        border-bottom: .5pt solid windowtext; ';
+					strTable+='        padding-left: 1px; ';
+					strTable+='        padding-right: 1px; ';
+					strTable+='        padding-top: 1px; ';
+					strTable+='     } ';
+					strTable+='  </style> ';
+					strTable+=' <table id="testTable"  border="1" frame="hsides" rules="groups" summary="Code page support in different versions of MS Windows."> ';
+					strTable+='<tr class="BorderHeader" style="background - color:#0026ff; color:#fff"> ';
+					strTable+='<th class="BorderHeader" >Order</th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Id </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Name </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Order </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Status </th> ';
+					strTable+='</tr> ';
+					var n=0;
+					var currentRow=4;
+					for(var i=0;i<itemCount;i++) {
+						var vTemp=datas[i];
+						currentRow+=1;
+						n+=1;
+						strTable+='<tr >';
+						strTable+='<th class="Border" > '+n+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Id+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Name+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.NumericalOrder+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Status+' </th> ';
+						strTable+='</tr>';
+					}
+					strTable+=' </table> ';
+					ExportHtmlToExcel(strTable,'Sys_Role');
+					showNoticeSuccess(language.Message_ExportSuccess);
+				}
+
+			</script>

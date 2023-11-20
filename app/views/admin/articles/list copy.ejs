@@ -1,0 +1,898 @@
+<%- include ('./../helpers/pagination') %>
+	<% const collection="articles" ; const linkPrefix=systemConfig.prefixAdmin + `/${collection}/`; %>
+		<%- include ('./../elements/notify') %>
+
+			<div class="container-fluid">
+				<%- include ('./../elements/errors') %>
+					<input name="linkPrefix" id="linkPrefix" type="hidden" value="<%= linkPrefix %>">
+					<input name="params" id="params" type="hidden" value="<%= params %>">
+					<!-- <div class="card card-info card-outline">
+					<div class="card-header">
+						<h6 class="card-title">Form - Add New & Edit</h6>
+						<div class="card-tools">
+							<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+								title="Collapse">
+								<i class="fas fa-minus"></i>
+							</button>
+						</div>
+					</div> -->
+					<div class="card card-info card-outline collapsed-card">
+						<div class="card-header">
+							<h6 class="card-title">Form - Add New & Edit</h6>
+							<div class="card-tools">
+								<button type="button" class="btn btn-tool" data-card-widget="collapse"
+									data-toggle="tooltip" title="Collapse">
+									<i class="fas fa-plus"></i>
+								</button>
+							</div>
+						</div>
+						<div class="card-body" style="display: none;">
+							<!-- <form role="form" onsubmit="return chekValueSubmit()" action="<%= linkPrefix %>save/"
+							method="post" class="mb-0" id="admin-form" enctype="multipart/form-data"> -->
+							<form role="form" name="formArticles" action="<%= linkPrefix %>save/" method="post"
+								class="mb-0" id="formArticles" enctype="multipart/form-data" autocomplete="off">
+								<div class="form-group row">
+									<label id="labId" class="col-sm-2 col-form-label text-sm-right">Id</label>
+									<div class="col-xs-4 col-sm-4">
+										<input type="text" name="Id" id="Id" value="<%= item.Id %>" readonly
+											class="form-control form-control-sm">
+									</div>
+									<label id="labCategorieId"
+										class="col-sm-2 col-form-label text-sm-right required">Categorie</label>
+									<div class="col-xs-4 col-sm-4">
+										<div class="dropdown">
+											<div id="divDropdownName" class="dropdown-content">
+												<input type="text" id="Name" name="Name"
+													onkeyup="filterSelectBox('Name')" onfocus="focusDropdown('Name')"
+													onblur="blurDropdown('Name')" size="75"
+													class="form-control form-control-sm">
+												<input id="CategorieId" name="CategorieId" type="hidden">
+												<div id="DivContenName" class="Divdropdown-content">
+												</div>
+											</div>
+										</div>
+									</div>
+									<label id="labTitle"
+										class="col-sm-2 col-form-label text-sm-right required">Title</label>
+									<div class="col-xs-4 col-sm-4">
+										<input type="text" name="Title" id="Title" value="<%= item.Title %>"
+											class="form-control form-control-sm">
+									</div>
+									<label id="labSlug"
+										class="col-sm-2 col-form-label text-sm-right required">Slug</label>
+									<div class="col-xs-4 col-sm-4">
+										<input type="text" name="Slug" id="Slug" value="<%= item.Slug %>"
+											class="form-control form-control-sm">
+									</div>
+									<label id="labThumb" class="col-sm-2 col-form-label text-sm-right ">Thumb</label>
+									<div class="col-xs-4 col-sm-4">
+										<input type="file" name="Thumb" id="Thumb" class="form-control form-control-sm">
+									</div>
+
+									<label id="labOrdering"
+										class="col-sm-2 col-form-label text-sm-right ">Ordering</label>
+									<div class="col-xs-4 col-sm-4">
+										<input type="number" name="Ordering" id="Ordering" value="<%= item.Ordering %>"
+											class="form-control form-control-sm">
+									</div>
+									<label id="labSpecial"
+										class="col-sm-2 col-form-label text-sm-right ">Special</label>
+									<div class="col-sm-4 col-form-label text-sm-left ">
+										<input type="checkbox" name="Special" id="Special"
+											class="form-control form-control-sm form-control-checkbox">
+									</div>
+									<label id="labStatus" class="col-sm-2 col-form-label text-sm-right ">Status</label>
+									<div class="col-sm-4 col-form-label text-sm-left ">
+										<input type="checkbox" checked name="Status" id="Status"
+											class="form-control form-control-sm form-control-checkbox">
+									</div>
+									<!-- <div class="col-xs-3 col-sm-3 ">
+									&nbsp;
+								</div> -->
+									<label id="labSummary"
+										class="col-sm-2 col-form-label text-sm-right required">Summary</label>
+									<div class="col-xs-10 col-sm-10">
+										<textarea rows="4" cols="75" id="Summary" name="Summary"
+											class="form-control form-control-sm"></textarea>
+
+										<!-- <input type="text" name="Summary" id="Summary" value="<%= item.Summary %>"
+										class="form-control form-control-sm"> -->
+
+
+									</div>
+									<label id="labContentArticles"
+										class="col-sm-2 col-form-label text-sm-right required">Content</label>
+
+									<div class="col-xs-10 col-sm-10">
+										<textarea class="form-control" name="content_ckeditor" rows="20"
+											id="content_ckeditor"></textarea>
+									</div>
+
+								</div>
+								<div class="form-group row">
+									<div class="col-xs-2 col-sm-2"></div>
+									<div class="col-xs-10 col-sm-10">
+
+										<button type="button" id="btnSave" class="btn btn-sm btn-success" title="Save">
+											<i class="fa fa-check"></i> Save
+										</button>
+										&nbsp; <button type="button" id="btnUpdate" class="btn-sm btn-primary"
+											title="Update">
+											<i class="fa fa-edit"></i> Update
+										</button>
+
+										&nbsp; <button type="button" id="btnDelete" class="btn btn-sm btn-danger"
+											title="Delete">
+											<i class="fas fa-trash-alt"></i> Delete
+										</button>
+										&nbsp; <button type="button" id="btnSearchPost" class="btn btn-sm btn-primary"
+											title="Search">
+											<i class="fa fa-search"></i> Search
+										</button>
+										&nbsp; <button type="button" id="btnExport" class="btn btn-sm btn-success"
+											title="Export">
+											<i class="fa fa-download"></i> Export
+										</button>
+
+										<input name="ContentArticles" id="ContentArticles" type="hidden"
+											value="<%= item.ContentArticles %>" />
+										<input name="Thumb_old" id="Thumb_old" value="<%= item.Thumb %>"
+											type="hidden" />
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="text-success" id="divMessage"></div>
+								</div>
+							</form>
+							<input name="IdHidden" id="IdHidden" type="hidden">
+							<input name="listData" id="listData" type="hidden" value="<%= itemString %>">
+							<input name="sysLanguage" id="sysLanguage" type="hidden" value="<%= language %>">
+							<input name="listDataCatalogue" id="listDataCatalogue" type="hidden"
+								value="<%= catalogue %>">
+						</div>
+					</div>
+					<div class="card card-info card-outline">
+						<div class="card-header">
+							<h4 class="card-title">List data</h4>
+							<div class="card-tools">
+								<button type="button" class="btn btn-tool" data-card-widget="collapse"
+									data-toggle="tooltip" title="Collapse"><i class="fas fa-minus"></i></button>
+							</div>
+						</div>
+						<div class="card-body">
+							<table id="tableArticles" class="table table-bordered table-hover btn-table mb-0">
+								<thead>
+									<tr>
+										<th class="text-center">
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input cbAll" type="checkbox"
+													id="check-all">
+												<label for="check-all" class="custom-control-label"></label>
+											</div>
+										</th>
+										<th class="text-center"><label id="labId_tb">Id</label></a></th>
+										<th class="text-center"><label id="labCategorieId_tb">Categorie</label></a></th>
+										<th class="text-center"><label id="labTitle_tb">Title</label></a></th>
+
+										<th class="text-center"><label id="labThumb_tb">Thumb</label></a></th>
+										<th class="text-center"><label id="labSummary_tb">Summary</label></a></th>
+
+										<th class="text-center"><label id="labOrdering_tb">Ordering</label></a></th>
+										<th class="text-center"><label id="labSpecial_tb">Special</label></a></th>
+										<th class="text-center"><label id="labStatus_tb">Status</label></a></th>
+										<th class="text-center">Action</a></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-xs-1 col-sm-1">Quantity per page:</div>
+						<div class="col-xs-1 col-sm-1">
+							<input type="number" class="form-control form-control-sm" name="numberItemPerPage"
+								id="numberItemPerPage" size="4">
+						</div>
+						<div class="col-xs-9 col-sm-9" id="paginationArticles">
+						</div>
+					</div>
+
+			</div>
+			<script src="admin/js/replaceckeditor.js"></script>
+			<script type="application/javascript">
+
+				var language={};
+
+				onLoadData();
+				function onLoadData() {
+					getLanguage();
+					setUpdateButtonStatus(false)
+					setInterfaceText();
+					getNumberItemPerPage();
+					var strData=$('#listData').val();
+					const arrData=JSON.parse(strData);
+					if(arrData.length>0) {
+						displayDataToTable(arrData);
+						var paramsString=$('#params').val();
+						const params=JSON.parse(paramsString);
+						var linkPrefix=$('#linkPrefix').val();
+						paginationHelper(params.pagination,"Articles",params.currentStatus,params.keyword,linkPrefix,
+							"paginationArticles");
+					}
+				}
+
+				$("#numberItemPerPage").change(function() {
+					setNumberItemPerPage();
+				});
+
+
+				$('input#Title').keyup(function() {
+					$('input[name="Slug"]').val(change_alias($(this).val()));
+				});
+
+				function displayDataToTable(datas) {
+					//var link=$('#linkPrefix').val();
+					var link=createLinkImage('articles');
+					var table=document.getElementById("tableArticles");
+					var lengthtable=table.rows.length-1;
+					for(var n=lengthtable;n>0;n--) {
+						table.deleteRow(n);
+					}
+					var length=datas.length;
+					if(length<1) {showNoticeDanger(language.Message_NotFoundData); return false;} datas.forEach(function(data) {
+						var row=table.insertRow(1);
+						var cell0=row.insertCell(0);
+						var cell1=row.insertCell(1);
+						var cell2=row.insertCell(2);
+						var cell3=row.insertCell(3);
+						var cell4=row.insertCell(4);
+						var cell5=row.insertCell(5);
+						var cell6=row.insertCell(6);
+						var cell7=row.insertCell(7);
+						var cell8=row.insertCell(8);
+						var cell9=row.insertCell(9);
+						let check=`<div class="custom-control custom-checkbox">
+				<input class="custom-control-input" type="checkbox" name="chkListData" id="${data.Id}"
+					value="${data.Id}">
+				<label for="${data.Id}" class="custom-control-label"></label>
+				</div>`;
+						cell0.innerHTML=check;
+						cell1.innerHTML=data.Id;
+						cell2.innerHTML=data.Name;
+						cell3.innerHTML=data.Title;
+
+						cell4.innerHTML=`<img src=\"${link}${data.Thumb}\" alt="" width=\"100\" >`;
+						cell5.innerHTML=data.Summary;
+
+						cell6.innerHTML=data.Ordering;
+						cell7.innerHTML=data.Special;
+						cell8.innerHTML=data.Status;
+						let strbutton=" <a onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn "+
+							" btn - sm btn - info\" title=\"Edit\">"+
+							"<i class=\"fas fa-pencil-alt\"></i>"+
+							"</a> "+
+							" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\""+
+							" title =\"Delete\" onclick=\"deleteById(this,"+data.Id+")\">";
+						strbutton+=" <i class=\"fas fa-trash-alt\"></i> ";
+						strbutton+="</ button > ";
+						cell9.innerHTML=strbutton;
+					});
+				}
+				function setUpdateButtonStatus(statusUpdate) {
+					$('#btnSave').prop('hidden',statusUpdate);
+					$('#btnUpdate').prop('hidden',!statusUpdate);
+				}
+
+				function getLanguage() {
+					var languageString=$('#sysLanguage').val();
+					language=JSON.parse(languageString);
+				}
+
+				function setInterfaceText() {
+					$("#pageTitle").html(language.TitlePage);
+					$("#labId").text(language.Id);
+					$("#labCategorieId").text(language.CategorieId);
+					$("#labTitle").text(language.Title);
+					$("#labSlug").text(language.Slug);
+					$("#labThumb").text(language.Thumb);
+					$("#labSummary").text(language.Summary);
+					$("#labContentArticles").text(language.ContentArticles);
+					$("#labOrdering").text(language.Ordering);
+					$("#labSpecial").text(language.Special);
+					$("#labStatus").text(language.Status);
+					$("#labId_tb").text(language.Id);
+					$("#labCategorieId_tb").text(language.CategorieId);
+					$("#labTitle_tb").text(language.Title);
+					$("#labSlug_tb").text(language.Slug);
+					$("#labThumb_tb").text(language.Thumb);
+					$("#labSummary_tb").text(language.Summary);
+					$("#labContentArticles_tb").text(language.ContentArticles);
+					$("#labOrdering_tb").text(language.Ordering);
+					$("#labSpecial_tb").text(language.Special);
+					$("#labStatus_tb").text(language.Status);
+				}
+
+				createDataForDropdownLists();
+				function createDataForDropdownLists() {
+					var strCatalogue=$('#listDataCatalogue').val();
+					arrCatalogue=JSON.parse(strCatalogue);
+					createDataForDropdown(arrCatalogue[0],'CategorieId','Id','Name','Name','-- Chose --');
+				}
+
+				closeAllDropdown();
+				function closeAllDropdown() {
+					var DivContenName=document.getElementById('DivContenName');
+					DivContenName.hidden=true;
+
+				}
+
+				function getById(Id) {
+					var link=$('#linkPrefix').val()+'getById/'+Id;
+					$.ajax({
+						type: 'GET',
+						url: link,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							if(success==true) {
+								showDataToForm(resultdata.data);
+							}
+						},
+						failure: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+						error: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+					});
+				}
+
+				function showDataToForm(data) {
+					try {
+						setUpdateButtonStatus(true);
+						$('#IdHidden').val(data.Id);
+						$('#Id').val(data.Id);
+						$('#CategorieId').val(data.CategorieId);
+						$('#Name').val(data.Name);
+						$('#Title').val(data.Title);
+						$('#Slug').val(data.Slug);
+						$('#Thumb_old').val(data.Thumb);
+						$('#Summary').val(data.Summary);
+						$('#ContentArticles').val(data.ContentArticles);
+						var contentDecode=decodeHTMLEntities(data.ContentArticles);
+						CKEDITOR.instances['content_ckeditor'].setData(contentDecode);
+
+						// var editor = CKEDITOR.instances['content_ckeditor'];
+						// editor.insertHtml(contentDecode);
+
+						$('#Ordering').val(data.Ordering);
+						if((data.Special=="true")||(data.Special==true)||(data.Special=="active")||(data.Special==
+							"yes")||(data.Special=="1"))
+							$("#Special").prop("checked",true);
+						else $("#Special").prop("checked",false);
+						if((data.Status=="true")||(data.Status==true)||(data.Status=="active")||(data.Status=="yes")
+							||(data.Status=="1"))
+							$("#Status").prop("checked",true);
+						else $("#Status").prop("checked",false);
+
+
+
+						Message_CompletedGetData
+					}
+					catch(error) {}
+				}
+
+				function clearForm() {
+					try {
+						$('#IdHidden').val('');
+						setUpdateButtonStatus(false)
+						$('#Id').val('');
+						$('#CategorieId').val('');
+						$('#Name').val('');
+						$('#Title').val('');
+						$('#Slug').val('');
+						$('#Thumb').val('');
+						$('#Summary').val('');
+						$('#ContentArticles').val('');
+						$('#Ordering').val('');
+						$("#Special").prop("checked",false);
+						//$("#Status").prop("checked",false);
+					}
+					catch(error) {}
+				}
+
+				$('#btnSearchPost').click(function() {
+					$(this).prop('disabled',true);
+					getContentPages(1);
+				});
+
+				function getContentPages(page) {
+					var sortStorage=getSortType(linkPrefix);
+					let data={
+						'Page': page,
+						'CategorieId': $('#CategorieId').val(),
+						'Title': $('#Title').val(),
+						'Slug': $('#Slug').val(),
+						'Thumb': $('#Thumb').val(),
+						'Summary': $('#Summary').val(),
+						'ContentArticles': $('#ContentArticles').val(),
+						sortColumn: sortStorage.sortColumn,
+						sortType: sortStorage.sortType,
+						numberItemPerPage: $('#numberItemPerPage').val()
+					}
+					var link=$('#linkPrefix').val()+'search';
+					$.ajax({
+						type: 'POST',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							$('#btnSearchPost').prop('disabled',false);
+							let result=resultdata.result;
+							displayDataToTable(result);
+							var linkPrefix=$('#linkPrefix').val();
+							let params=resultdata.params;
+							paginationHelper(params.pagination,"Articles","","",linkPrefix,"paginationArticles");
+
+							if(params.pagination.totalItems>0) {
+								var message=language.Message_Find+params.pagination.totalItems+language.Message_Words_records;
+								showNoticeSuccess(message);
+							}
+						},
+						failure: function(response) {
+							$('#btnSearchPost').prop('disabled',false);
+							showNoticeDanger('Search Error');
+						},
+						error: function(response) {
+							$('#btnSearchPost').prop('disabled',false);
+							showNoticeDanger('Search Error');
+						}
+					});
+					$('#btnSearchPost').prop('disabled',false);
+				}
+
+				$('#btnSave').click(function() {
+					$(this).prop('disabled',true);
+					chekValueAndSubmit();
+					$(this).prop('disabled',false);
+				});
+				function chekValueAndSubmit() {
+					if(($('#CategorieId').val()<0)||($('#CategorieId').val()>2147483647)) {
+						var message=formatMessage(language.CategorieId+": "+language.Message_Invalid_CategorieId,'0','2147483647');
+						alert(message);
+						return false;
+					}
+					if(($('#Title').val().length<1)||($('#Title').val().length>150)) {
+						var message=formatMessage(language.Title+": "+language.Message_Invalid_Title,'1','150');
+						alert(message);
+						return false;
+					}
+					if(($('#Slug').val().length<1)||($('#Slug').val().length>150)) {
+						var message=formatMessage(language.Slug+": "+language.Message_Invalid_Slug,'1','150');
+						alert(message);
+						return false;
+					}
+					if(($('#Summary').val().length<1)||($('#Summary').val().length>1000)) {
+						var message=formatMessage(language.Summary+": "+language.Message_Invalid_Summary,'1','1000');
+						alert(message);
+						return false;
+					}
+
+					var editorText=CKEDITOR.instances.content_ckeditor.getData();// content_ckeditor is name control textarea
+					var txt=document.createElement('textarea');
+					txt.innerHTML=editorText;
+					$("#ContentArticles").val(txt.value); // Decoded // input hidden					
+					if(($('#ContentArticles').val().length<10)) {
+						var message=formatMessage(language.ContentArticles+": "+language.Message_Invalid_ContentArticles,'1','-1');
+						alert(message);
+						return false;
+					}
+					document.getElementById("formArticles").submit();
+				}
+
+
+				function getDataForm() {
+					if(($('#CategorieId').val()<0)||($('#CategorieId').val()>2147483647)) {
+						var message=formatMessage(language.CategorieId+": "+language.Message_Invalid_CategorieId,'0',
+							'2147483647');
+						alert(message);
+						return false;
+					}
+					if(($('#Title').val().length<1)||($('#Title').val().length>150)) {
+						var message=formatMessage(language.Title+": "+language.Message_Invalid_Title,'1','150');
+						alert(message);
+						return false;
+					}
+					if(($('#Slug').val().length<1)||($('#Slug').val().length>150)) {
+						var message=formatMessage(language.Slug+": "+language.Message_Invalid_Slug,'1',
+							'150');
+						alert(message);
+						return false;
+					}
+					if(($('#Summary').val().length<1)||($('#Summary').val().length>1000)) {
+						var message=formatMessage(language.Summary+": "+language.Message_Invalid_Summary,
+							'1','1000');
+						alert(message);
+						return false;
+					}
+					if(($('#ContentArticles').val().length<10)) {
+						var
+							message=formatMessage(language.ContentArticles+": "+
+								language.Message_Invalid_ContentArticles,'1','-1'); alert(message); return
+						false;
+					} return {
+						'IdHidden': $('#IdHidden').val(),'Id':
+							$('#Id').val(),'CategorieId': $('#CategorieId').val(),'Title':
+							$('#Title').val(),'Slug': $('#Slug').val(),'Thumb': $('#Thumb').val(),'Summary'
+							: $('#Summary').val(),'ContentArticles': $('#ContentArticles').val(),'Ordering':
+							$('#Ordering').val(),'Special': $('#Special').is(":checked"),'Status':
+							$('#Status').is(":checked"),
+					}
+				}
+				function saveInsert() {
+					let data=getDataForm(); if(data==false) {$('#btnSave').prop('disabled',false); return false;} var
+						link=$('#linkPrefix').val()+'save'; $.ajax({
+							type: 'post',url: link,data:
+								data,dataType: "json",success: function(response) {
+									var
+										success=response.success; var result=response.data; if((success=='false')||
+											(success==false)) showNoticeDanger(language.Message_AddNewError); else if((success
+												!=true)&&(success!='true')) showNoticeDanger(result.message); else {
+										insertRow(result.data); clearForm();
+									}
+								},failure: function(response) {
+									showErrorMessageSave(response,language.Message_AddNewError);
+								},error: function(response) {showErrorMessageSave(response,language.Message_AddNewError);},
+						});
+					$('#btnSave').prop('disabled',false);
+				}
+				function insertRow(data) {
+					var link=$('#linkPrefix').val();
+					link=createLinkImage(link);
+					showNoticeSuccess(language.Message_AddNewSuccess); var
+						table=document.getElementById("tableArticles"); var row=table.insertRow(1); var
+							cell0=row.insertCell(0); var cell1=row.insertCell(1); var cell2=row.insertCell(2);
+					var cell3=row.insertCell(3); var cell4=row.insertCell(4); var
+						cell5=row.insertCell(5); var cell6=row.insertCell(6); var cell7=row.insertCell(7);
+					var cell8=row.insertCell(8); var cell9=row.insertCell(9);
+					let check=`<div
+									class="custom-control custom-checkbox">
+									<input class="custom-control-input" type="checkbox" name="chkListData"
+										id="${data.Id}" value="${data.Id}">
+									<label for="${data.Id}" class="custom-control-label"></label>
+									</div>`;
+					cell0.innerHTML=check;
+					cell1.innerHTML=data.Id;
+					if(data.CategorieId==$('#CategorieId').val()) {
+						cell2.innerHTML=$('#Name').val();
+					}
+					cell3.innerHTML=data.Title;
+
+					cell4.innerHTML=`<img src=\"${link}${data.Thumb}\" alt="" width=\"100\" >`;
+					cell5.innerHTML=data.Summary;
+
+					cell6.innerHTML=data.Ordering;
+					cell7.innerHTML=data.Special;
+					cell8.innerHTML=data.Status;
+					let strbutton=" <a onclick=\"getById('"+data.Id+"')\" type=\"button\" "+
+						" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						"<i class=\"fas fa-pencil-alt\"></i>"+
+						"</a> "+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""
+						+data.Id+"\" title=\"Delete\" onclick=\"deleteById(this,"+data.Id+")\">";
+					strbutton+=" <i class=\"fas fa-trash-alt\"></i> ";
+					strbutton+="</ button > ";
+					cell9.innerHTML=strbutton;
+				}
+
+				$('#btnUpdate').click(function() {
+					$(this).prop('disabled',true);
+					chekValueAndSubmit();
+					//saveUpdate();
+					$(this).prop('disabled',false);
+				});
+
+				function saveUpdate() {
+					let data=getDataForm();
+					if(data==false) {
+						$('#btnUpdate').prop('disabled',false);
+						return false;
+					}
+					if(data.IdHidden=="") {
+						$('#btnUpdate').prop('disabled',false);
+						showNoticeDanger(language.Message_HaveNotSelectedItemUpdate);
+						return false;
+					}
+					var link=$('#linkPrefix').val()+'update';
+					$.ajax({
+						type: 'put',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_UpdateError);
+								return false;
+							}
+							else if((success!=true)&&(success!='true')) {
+								showNoticeDanger(result.message);
+								return false;
+							}
+							else {
+								updateRow(result.data);
+								clearForm();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						}
+					});
+					$('#btnUpdate').prop('disabled',false);
+				}
+
+				function updateRow(data) {
+					var link=$('#linkPrefix').val();
+					link=createLinkImage(link);
+					showNoticeSuccess(language.Message_UpdateSuccess);
+					var row=$("#tableArticles button[data-id='"+data.Id+"']").parents("tr")[0];
+					var tr="<tr>"+
+						"<td class=\"text-center\">"+
+						"<div class=\"custom-control custom-checkbox\">"+
+						"<input class=\"custom-control-input\" type=\"checkbox\""+
+						" name =\"chkListData\" id=\""+data.Id+"\" value=\""+data.Id+"\"> "
+						+
+						"<label for=\""+data.Id+"\" class=\"custom-control-label\"></label> "+
+						"</div>"+
+						"</td>";
+					tr+="<td class=\"text-center\">"+data.Id+"</td>";
+					if(data.CategorieId==$('#CategorieId').val()) {
+						tr+="<td class=\"text-center\">"+$('#Name').val()+"</td>";
+					}
+					tr+="<td class=\"text-center\">"+data.Title+"</td>";
+
+					tr+="<td class=\"text-center\"><img src=\""+link+data.Thumb+"\" alt=\"\" width=\"100\" > </td>";
+					tr+="<td class=\"text-center\">"+data.Summary+"</td>";
+
+					tr+="<td class=\"text-center\">"+data.Ordering+"</td>";
+					tr+="<td class=\"text-center\">"+data.Special+"</td>";
+					tr+="<td class=\"text-center\">"+data.Status+"</td>";
+					tr+="<td class=\"text-center\">"+
+						" <a onclick=\"getById('"+data.Id+"')\" type=\"button\" "+
+						" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						" <i class=\"fas fa-pencil-alt\"></i>"+
+						" </a>"+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" "+
+						" data - id=\""+data.Id+"\" title=\"Delete\" onclick=\"deleteById(this,'"+
+						data.Id+"')\">"+
+						" <i class=\"fas fa-trash-alt\"></i> "+
+						" </button> "+
+						" </td>"+
+						" </tr>";
+					$(row).after(tr);
+					$(row).remove();
+				}
+				function deleteById(row,IdObject) {
+					let message=language.Message_DoYouWantToDeleteById+' '+IdObject+'?';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={
+						'Id': IdObject
+					};
+					var link=$('#linkPrefix').val()+'deleteById';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							var message=resultdata.message;
+							var notice={};
+							if((success=='true')||(success==true)) {
+								showNoticeSuccess(language.Message_DeleteSuccess);
+								var i=row.parentNode.parentNode.rowIndex;
+								document.getElementById("tableArticles").deleteRow(i);
+								return true;
+							}
+							else if(message.length>10) {
+								showNoticeDanger(message);
+								return false;
+							}
+							else {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+				$('#btnDelete').click(function() {
+					$(this).prop('disabled',true);
+					deleteList();
+					$(this).prop('disabled',false);
+				});
+				function deleteList() {
+					var arrayId=[];
+					var listId=" ";
+					$("input:checkbox[name=chkListData]:checked").each(function() {
+						arrayId.push($(this).val());
+						listId+=$(this).val()+' ';
+					});
+					let message=language.Message_DoYouWantToDeleteInTheList+' '+listId+'?';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={arrayId};
+					var link=$('#linkPrefix').val()+'deleteList';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var result=resultdata.result;
+							var success=result.success;
+							var message=result.message;
+							if((success=='true')||(success==true)) {
+								let deleteSuccess=result.deleteSuccess;
+								let deleteError=result.deleteError;
+								if(deleteSuccess.length>0) {
+									let message=language.Message_DeleteSuccess;
+									message+=" "+deleteSuccess.toString();
+									if(deleteError.length>0) {
+										message+=" \n"+language.Message_DeleteFail+" "+deleteError.toString();
+									}
+									showNoticeSuccess(message);
+									deleteRows(arrayId,"tableArticles");
+									return true;
+								}
+								else if(deleteError.length>0) {
+									let message=language.Message_DeleteFail+" "+deleteError.toString();
+									showNoticeDanger(message);
+								}
+								else {
+									showNoticeDanger(language.Message_DeleteFail);
+								}
+							}
+							else if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+				$('#btnExport').click(function() {
+					$(this).prop('disabled',true);
+					exportData();
+					$(this).prop('disabled',false);
+				});
+
+				function exportData() {
+					let data={
+						'Title': $('#Title').val(),
+						'Slug': $('#Slug').val(),
+						'Thumb': $('#Thumb').val(),
+						'Summary': $('#Summary').val(),
+						'ContentArticles': $('#ContentArticles').val(),
+					}
+					var link=$('#linkPrefix').val()+'exportData';
+					$.ajax({
+						type: 'post',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							$('#btnExport').prop('disabled',false);
+							let result=resultdata.result;
+							showNoticeSuccess(language.Message_CompletedGetData);
+							ExportToExcel(result);
+						},
+						failure: function(response) {
+							$('#btnExport').prop('disabled',false);
+							showNoticeDanger('Export Error');
+						},
+						error: function(response) {
+							$('#btnExport').prop('disabled',false);
+							showNoticeDanger('Export Error');
+						}
+					});
+					$('#btnExport').prop('disabled',false);
+				}
+
+				function ExportToExcel(datas) {
+					let itemCount=datas.length;
+					if(itemCount>1000) {
+						showNoticeDanger(language.Message_WarningWhenExportingDataTooMuch);
+					}
+					if(itemCount<1) {showNoticeDanger(language.Message_NotFoundData);} var
+						strTable='<style type="text/css">'; strTable+=' .Border { '; strTable
+							+='         color: windowtext; '; strTable+='         font-size: 11.0pt; ';
+					strTable+='         word-break:break-all;'; strTable
+						+='         font-style: normal; '; strTable+='         text-decoration: none; ';
+					strTable+='         font-family: "Times New Roman", serif; '; strTable
+						+='         text-align: left; '; strTable+='         vertical-align: bottom;';
+					strTable+='         border-left: .5pt solid windowtext; '; strTable
+						+='         border-right: .5pt solid windowtext; '; strTable
+							+='         border-top: .5pt solid windowtext; '; strTable
+								+='         border-bottom: .5pt solid windowtext; '; strTable
+									+='         padding-left: 1px; '; strTable+='         padding-right: 1px; ';
+					strTable+='         padding-top: 1px; '; strTable+='     } '; strTable
+						+=' .BorderHeader { '; strTable+='        color: white; '; strTable
+							+='         background-color:#0026ff; '; strTable+='        font-size: 11.0pt; ';
+					strTable+='        text-align: center; '; strTable
+						+='        font-style: normal; '; strTable+='        text-decoration: none; ';
+					strTable+='        font-family: "Times New Roman", serif; '; strTable
+						+='        vertical-align: bottom;'; strTable
+							+='        border-left: .5pt solid windowtext; '; strTable
+								+='        border-right: .5pt solid windowtext; '; strTable
+									+='        border-top: .5pt solid windowtext; '; strTable
+										+='        border-bottom: .5pt solid windowtext; '; strTable
+											+='        padding-left: 1px; '; strTable+='        padding-right: 1px; ';
+					strTable+='        padding-top: 1px; '; strTable+='     } '; strTable
+						+='  </style> '; strTable
+							+=' <table id="testTable"  border="1" frame="hsides" rules="groups" summary="Code page support in different versions of MS Windows."> '
+						; strTable
+							+='<tr class="BorderHeader" style="background - color:#0026ff; color:#fff"> ';
+					strTable+='<th class="BorderHeader" >Order</th> '; strTable
+						+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Id </th> '
+						; strTable
+							+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Categorie </th> '
+						; strTable
+							+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Title </th> '
+						; strTable
+							+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Slug </th> '
+						; strTable
+							+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Thumb </th> '
+						; strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Summary </th> ';
+					// strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Content </th> '; 
+
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Ordering </th> ';
+					strTable
+						+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Special </th> '
+						; strTable
+							+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Status </th> '
+						; strTable+='</tr> '; var n=0; var currentRow=4; for(var i=0;i<itemCount;i++) {
+							var vTemp=datas[i]; currentRow+=1; n+=1; strTable+='<tr >'; strTable
+								+='<th class="Border" > '+n+' </th> '; strTable+='<th  class="Border" > '+
+									vTemp.Id+' </th> '; strTable+='<th  class="Border" > '+vTemp.CategorieName
+										+' </th> '; strTable+='<th  class="Border" > '+vTemp.Title+' </th> ';
+							strTable+='<th  class="Border" > '+vTemp.Slug+' </th> '; strTable
+								+='<th  class="Border" > '+vTemp.Thumb+' </th> '; strTable
+									+='<th  class="Border" > '+vTemp.Summary+' </th> ';
+							// strTable += '<th  class="Border" > ' + vTemp.ContentArticles + ' </th> '; 
+							strTable+='<th  class="Border" > '+vTemp.Ordering+' </th> ';
+							strTable+='<th  class="Border" > '+vTemp.Special+' </th> '; strTable
+								+='<th  class="Border" > '+vTemp.Status+' </th> '; strTable+='</tr>';
+						}
+					strTable+=' </table> '; ExportHtmlToExcel(strTable,'Articles');
+					showNoticeSuccess(language.Message_ExportSuccess);
+				} </script>

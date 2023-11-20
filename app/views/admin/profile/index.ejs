@@ -1,0 +1,297 @@
+<%- include ('./../helpers/pagination') %>
+    <% const collection="profile" ; const linkPrefix=systemConfig.prefixAdmin + `/${collection}/`; %>
+        <% const linkPrefixChangePassword=systemConfig.prefixAdmin + `/auth/formchangepassword`; %>
+            <%- include ('./../helpers/general') %>
+                <%- include ('./../elements/notify') %>
+                    <script src="admin/js/sha1.js"></script>
+                    <input name="linkPrefix" id="linkPrefix" type="hidden" value="<%= linkPrefix %>">
+                    <input name="resultUpdate" id="resultUpdate" type="hidden" value="<%= resultUpdate %>">
+                    <div class="card card-info card-outline">
+                        <div class="card-body">
+                            <!-- I.Thông tin tài khoản đăng nhập ===================================================================== -->
+                            <!-- <div class="card card-info card-outline collapsed-card"> -->
+                            <div class="card card-info card-outline">
+                                <div class="card-header">
+                                    <h6 class="card-title">Login account information</h6>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            data-toggle="tooltip" title="Collapse">
+                                            <!-- <i class="fas fa-plus"></i> -->
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- <div class="card-body" style="display: none;">   -->
+                                <div class="card-body" style="display: block;">
+                                    <form role="form" name="formUser" action="<%= linkPrefix %>updateProfile/"
+                                        method="post" class="mb-0" id="formUser" enctype="multipart/form-data"
+                                        autocomplete="off">
+                                        <div class="form-group row">
+                                            <label id="labEmployeeCode"
+                                                class="col-sm-2 col-form-label text-sm-right required">EmployeeCode</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="text" name="EmployeeCode" id="EmployeeCode"
+                                                    value="<%= item.EmployeeCode %>"
+                                                    class="form-control form-control-sm">
+                                            </div>
+
+                                            <label id="labDepartmentId"
+                                                class="col-sm-2 col-form-label text-sm-right required">Department</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <div class="dropdown">
+                                                    <div id="divDropdownDepartmentName" class="dropdown-content">
+                                                        <input type="text" size="50" id="DepartmentName"
+                                                            name="DepartmentName"
+                                                            onkeyup="filterSelectBox('DepartmentName')"
+                                                            onfocus="focusDropdown('DepartmentName')"
+                                                            onblur="blurDropdown('DepartmentName')"
+                                                            class="form-control form-control-sm">
+                                                        <input id="DepartmentId" name="DepartmentId"
+                                                            value="<%= item.DepartmentId %>" type="hidden">
+                                                        <div id="DivContenDepartmentName" class="Divdropdown-content">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <label id="labFirstName"
+                                                class="col-sm-2 col-form-label text-sm-right required">FirstName</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="text" name="FirstName" id="FirstName"
+                                                    value="<%= item.FirstName %>" class="form-control form-control-sm">
+                                            </div>
+
+                                            <label id="labLastName"
+                                                class="col-sm-2 col-form-label text-sm-right required">LastName</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="text" name="LastName" id="LastName"
+                                                    value="<%= item.LastName %>" class="form-control form-control-sm">
+                                            </div>
+
+
+
+
+                                            <label id="labUserName"
+                                                class="col-sm-2 col-form-label text-sm-right required">UserName</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="text" name="UserName" id="UserName"
+                                                    autocomplete="new-password" value="<%= item.UserName %>"
+                                                    class="form-control form-control-sm">
+
+                                                <input name="UserName_Encrypted" id="UserName_Encrypted" type="hidden">
+                                            </div>
+
+                                            <label id="labBirthday"
+                                                class="col-sm-2 col-form-label text-sm-right ">Birthday</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="date" name="Birthday" id="Birthday"
+                                                    value="<%= getDate(item.Birthday) %>"
+                                                    class="form-control form-control-sm">
+                                                <input name="Birthday_" id="Birthday_" value="<%= item.Birthday %>"
+                                                    type="hidden">
+                                            </div>
+
+                                            <label id="labSex"
+                                                class="col-sm-2 col-form-label text-sm-right required">Sex</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <select id="Sex" name="Sex" class="custom-select custom-select-sm">
+                                                    <option value="Other">Choose</option>
+                                                    <option value="Male" <%=(item.Sex=="Male" ) ? 'selected="selected"'
+                                                        : '' %>
+                                                        >Male</option>
+                                                    <option value="Female" <%=(item.Sex=="Female" )
+                                                        ? 'selected="selected"' : '' %> >Female</option>
+
+                                                    <option value="Other" <%=(item.Sex=="Other" )
+                                                        ? 'selected="selected"' : '' %>
+                                                        >Other</option>
+
+                                                </select>
+
+                                            </div>
+                                            <label id="labEmail"
+                                                class="col-sm-2 col-form-label text-sm-right ">Email</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="email" name="Email" id="Email" value="<%= item.Email %>"
+                                                    class="form-control form-control-sm">
+                                            </div>
+                                            <label id="labPhoneNumber"
+                                                class="col-sm-2 col-form-label text-sm-right ">PhoneNumber</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="text" name="PhoneNumber" id="PhoneNumber"
+                                                    value="<%= item.PhoneNumber %>"
+                                                    class="form-control form-control-sm">
+                                            </div>
+                                            <label id="labAddress"
+                                                class="col-sm-2 col-form-label text-sm-right ">Address</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="text" name="Address" id="Address"
+                                                    value="<%= item.Address %>" class="form-control form-control-sm">
+                                            </div>
+
+                                            <label id="labAvatar"
+                                                class="col-sm-2 col-form-label text-sm-right ">Avatar</label>
+                                            <div class="col-xs-4 col-sm-4">
+                                                <input type="file" name="Avatar" id="Avatar"
+                                                    class="form-control form-control-sm">
+                                                <img src="" alt="" name="imgAvatar" id="imgAvatar" width="200">
+                                                <input name="Avatar_old" id="Avatar_old" value="<%= item.Avatar %>"
+                                                    type="hidden" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-xs-2 col-sm-2"></div>
+                                            <div class="col-xs-10 col-sm-10">
+                                                &nbsp; <button type="button" id="btnUpdate" class="btn-sm btn-primary"
+                                                    title="Update">
+                                                    <i class="fa fa-save"></i> Update
+                                                </button>
+                                                &nbsp; <button type="button" id="btnChangePassword"
+                                                    class="btn-sm btn-success"
+                                                    onclick="location.href='<%= linkPrefixChangePassword %>';"
+                                                    title="Change Password">
+                                                    <i class="fas fa-pencil-alt"></i> Change Password
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="text-success" id="divMessage"></div>
+                                        </div>
+                                    </form>
+                                    <input name="UsersIdHidden" id="UsersIdHidden" value="<%= item.UsersId %>"
+                                        type="hidden">
+                                    <input name="sysLanguage" id="sysLanguage" type="hidden" value="<%= language %>">
+                                    <input name="listDataCatalogue" id="listDataCatalogue" type="hidden"
+                                        value="<%= catalogue %>">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- end I.Thông tin tài khoản đăng nhập ===================================================================== -->
+                    <script type="application/javascript">
+                        var language;
+                        OnLoad();
+                        function OnLoad() {
+                            getLanguage();
+                            setInterfaceText();
+                            createDataForDropdownLists();
+                            closeAllDropdown();
+                            LoadImage();
+                            resultUpdate();
+
+                            // var birthdayString=$('#birthday_').val();
+                            // var birthday=new Date(birthdayString);
+                            // $('#birthday').val(birthday.toLocaleDateString('en-CA')); //;//YYYY-MM-dd  
+
+                        }
+
+
+                        function LoadImage() {
+                            var Avatar=$('#Avatar_old').val();
+                            if(Avatar.length>3) {
+                                var link=createLinkImage('sys_User');
+                                $("#imgAvatar").attr("src",link+Avatar);
+                            }
+                        }
+
+                        function getLanguage() {
+                            var languageString=$('#sysLanguage').val();
+                            language=JSON.parse(languageString);
+                        }
+
+                        function setInterfaceText() {
+                            $("#labEmployeeCode").text(language.EmployeeCode);
+                            $("#labDepartmentId").text(language.DepartmentId);
+                            $("#labLastName").text(language.LastName);
+                            $("#labFirstName").text(language.FirstName);
+                            $("#labUserName").text(language.UserName);
+                            $("#labPassword").text(language.Password);
+                            $("#labSex").text(language.Sex);
+                            $("#labEmail").text(language.Email);
+                            $("#labPhoneNumber").text(language.PhoneNumber);
+                            $("#labBirthday").text(language.Birthday);
+                            $("#labAddress").text(language.Address);
+                            $("#labAvatar").text(language.Avatar);
+
+                        }
+
+                        function createDataForDropdownLists() {
+                            var strCatalogue=$('#listDataCatalogue').val();
+                            arrCatalogue=JSON.parse(strCatalogue);
+                            var arrDepartment=arrCatalogue[0];
+                            createDataForDropdown(arrDepartment,'DepartmentId','DepartmentId','DepartmentName','DepartmentName','-- Chose --',{showId: false});
+                            var DepartmentId=$('#DepartmentId').val();
+                            arrDepartment.forEach(function(data) {
+                                if(DepartmentId==data.DepartmentId) {
+                                    $('#DepartmentName').val(data.DepartmentName);
+                                    return;
+                                }
+                            });
+                        }
+
+                        function closeAllDropdown() {
+                            var DivContenDepartmentName=document.getElementById('DivContenDepartmentName');
+                            DivContenDepartmentName.hidden=true;
+                        }
+
+                        function chekValueAndSubmit() {
+                            if(($('#EmployeeCode').val().length<3)||($('#EmployeeCode').val().length>15)) {
+                                var message=formatMessage(language.EmployeeCode+": "+language.Message_Invalid_EmployeeCode,'1','15');
+                                alert(message);
+                                return false;
+                            }
+
+                            if(($('#DepartmentId').val()<0)||($('#DepartmentId').val()>9223372036854775807)) {
+                                var message=formatMessage(language.DepartmentId+": "+language.Message_Invalid_DepartmentId,'0','9223372036854775807');
+                                alert(message);
+                                return false;
+                            }
+
+                            if(($('#LastName').val().length<1)||($('#LastName').val().length>30)) {
+                                var message=formatMessage(language.LastName+": "+language.Message_Invalid_LastName,'1','30');
+                                alert(message);
+                                return false;
+                            }
+                            if(($('#FirstName').val().length<3)||($('#FirstName').val().length>30)) {
+                                var message=formatMessage(language.FirstName+": "+language.Message_Invalid_FirstName,'1','30');
+                                alert(message);
+                                return false;
+                            }
+                            if(($('#UserName').val().length<3)||($('#UserName').val().length>20)) {
+                                var message=formatMessage(language.UserName+": "+language.Message_Invalid_UserName,'3','20');
+                                alert(message);
+                                return false;
+                            }
+                            let UserName=$('#UserName').val();
+                            UserName=replaceAll(UserName,' ','');
+                            UserName=UserName.toLowerCase();
+                            let UserName_Encrypted=hex_sha1(UserName);
+                            $('#UserName_Encrypted').val(UserName_Encrypted);
+                            document.getElementById("formUser").submit();
+                        }
+
+                        $('#btnUpdate').click(function() {
+                            $(this).prop('disabled',true);
+                            chekValueAndSubmit();
+                            //saveUpdate();
+                            $(this).prop('disabled',false);
+                        });
+
+                        function resultUpdate() {
+                            var resultString=$('#resultUpdate').val();
+                            if(resultString!='') {
+                                var result=JSON.parse(resultString);
+                                var success=result.success;
+                                if(success==true) {
+                                    showNoticeSuccess(language.Message_UpdateSuccess);
+                                }
+                                else if(success==false) {
+                                    showNoticeDanger(language.Message_UpdateError);
+                                }
+                            }
+                        }
+
+                    </script>

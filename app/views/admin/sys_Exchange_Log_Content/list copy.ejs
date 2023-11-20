@@ -1,0 +1,965 @@
+<%- include ('./../helpers/pagination') %>
+	<% const collection="sys_Exchange_Log_Content" ; const linkPrefix=systemConfig.prefixAdmin + `/${collection}/`; %>
+		<%- include ('./../elements/notify') %>
+			<div class="container-fluid">
+				<%- include ('./../elements/errors %>
+					<input name="linkPrefix" id="linkPrefix" type="hidden" value="<%= linkPrefix %>">
+					<input name="params" id="params" type="hidden" value="<%= params %>">
+					&nbsp; &nbsp; <button type="button" id="btnOpenMainModalForm" class="btn btn-primary">
+						<i class="fas fa-plus"></i> Add new
+					</button>
+					&nbsp; <button type="button" id="btnDelete" class="btn-sm btn-danger" title="Delete">
+						<i class="fas fa-trash-alt"></i> Delete
+					</button>
+					&nbsp; <button type="button" id="btnSearchPost_OpenForm" class="btn-sm btn-info" title="Search">
+						<i class="fa fa-search"></i> Search
+					</button>
+					&nbsp; <button type="button" id="btnExport_OpenForm" class="btn-sm btn-success" title="Export">
+						<i class="fa fa-download"></i> Export
+					</button>
+					&nbsp; <button type="button" id="btnRefreshPage" class="btn-sm btn-warning" title="Refresh"
+						onclick="RefreshPage()">
+						<i class="fa fa-refresh"></i> Refresh
+					</button>
+					<!-- ================ Modal From ======================== -->
+					<div class="modal fade" id="modaMainForm" data-backdrop="static" data-keyboard="true" tabindex="- 1"
+						role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-xl" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Add New & Edit</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form role="form" name="formSys_Exchange_Log_Content"
+										id="formSys_Exchange_Log_Content" autocomplete="off"
+										enctype="multipart/form-data" action=" <%= linkPrefix %>save" method="post">
+										<div class="form-group row">
+											<label id="labId" class="col-sm-2 col-form-label text-sm-right ">Id</label>
+											<div class="col-xs-4 col-sm-4">
+												<input type="number" readonly name="Id" id="Id" value="<%= item.Id %>"
+													class="form-control form-control-sm">
+											</div>
+											<label id="labLogSubjectId"
+												class="col-sm-2 col-form-label text-sm-right ">Subject</label>
+											<div class="col-xs-4 col-sm-4">
+												<div class="dropdown">
+													<div id="divDropdownName" class="dropdown-content">
+														<input type="text" size="50" id="Name" name="Name"
+															onkeyup="filterSelectBox('Name')"
+															onfocus="focusDropdown('Name')"
+															onblur="blurDropdown('Name')"
+															class="form-control form-control-sm">
+														<input id="LogSubjectId" name="LogSubjectId" type="hidden">
+														<div id="DivContenName" class="Divdropdown-content">
+														</div>
+													</div>
+												</div>
+											</div>
+											<label id="labTitle"
+												class="col-sm-2 col-form-label text-sm-right required">Title</label>
+											<div class="col-xs-4 col-sm-4">
+												<input type="text" name="Title" id="Title" value="<%= item.Title %>"
+													class="form-control form-control-sm">
+											</div>
+											<label id="labImage"
+												class="col-sm-2 col-form-label text-sm-right ">Image</label>
+											<div class="col-xs-4 col-sm-4">
+												<input type="file" name="Image" id="Image"
+													class="form-control form-control-sm">
+												<input type="hidden" name="Image_old" id="Image_old"
+													value="<%= item.Image %>">
+											</div>
+											<label id="labContent_Exchange"
+												class="col-sm-2 col-form-label text-sm-right required">Content</label>
+											<div class="col-xs-4 col-sm-4">
+												<input type="text" name="Content_Exchange" id="Content_Exchange"
+													value="<%= item.Content_Exchange %>"
+													class="form-control form-control-sm">
+											</div>
+											<label id="labStatus_Processed"
+												class="col-sm-2 col-form-label text-sm-right ">Status Processed</label>
+											<div class="col-xs-4 col-sm-4">
+												<select id="Status_Processed" name="Status_Processed"
+													class="custom-select custom-select-sm">
+													<option value="novalue">Choose Status Processed</option>
+													<option value="Active" <%=(item.Status_Processed=="Active" )
+														? 'selected="selected"' : '' %> >Active</option>
+													<option value="Inactive" <%=(item.Status_Processed=="Inactive" )
+														? 'selected="selected"' : '' %> >Inactive</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="text-success" id="divMessage"></div>
+										</div>
+										<input name="IdHidden" id="IdHidden" type="hidden">
+										<div class="modal-footer">
+											&nbsp; <button type="button" id="btnCloseMainMoal" data-dismiss="modal"
+												class="btn btn-sm btn-primary" title="Close">
+												<i class="fa fa-mail-reply"></i> Close
+											</button>
+											<button type="button" id="btnSave" class="btn-sm btn-success" title="Save">
+												<i class="fa fa-save"></i> Save
+											</button>
+											&nbsp; <button type="button" id="btnSaveAs" class="btn-sm btn-danger"
+												title="Save as">
+												<i class="far fa-clone"></i> Save as
+											</button>
+											&nbsp; <button type="button" id="btnUpdate" class="btn-sm btn-primary"
+												title="Update">
+												<i class="fa fa-save"></i> Update
+											</button>
+											&nbsp; <button type="button" id="btnSearchPost" class="btn-sm btn-info"
+												title="Search">
+												<i class="fa fa-search"></i> Search
+											</button>
+											&nbsp; <button type="submit" id="btnSearchGet" class="btn-sm btn-warning"
+												title="Search Get">
+												<i class="fa fa-search"></i> Search Get
+											</button>
+											&nbsp; <button type="button" id="btnExport" class="btn-sm btn-success"
+												title="Export">
+												<i class="fa fa-download"></i> Export
+											</button>
+										</div>
+									</form>
+									<input name="listData" id="listData" type="hidden" value="<%= itemString %>">
+									<input name="sysLanguage" id="sysLanguage" type="hidden" value="<%= language %>">
+									<input name="listDataCatalogue" id="listDataCatalogue" type="hidden"
+										value="<%= catalogue %>">
+									<!-- // Underline -->
+									<!--<div class="card card-info card-outline collapsed-card"></div>-->
+								</div> <!-- End <div class="modal-body">  -->
+								<!-- ================= Other information ==============================-->
+								<div class="card card-info card-outline collapsed-card">
+									<div class="card-header">
+										<h6 class="card-title">Other information</h6>
+										<div class="card-tools">
+											<button type="button" class="btn btn-tool" data-card-widget="collapse"
+												data-toggle="tooltip" title="Collapse">
+												<i class="fas fa-plus"></i>
+											</button>
+										</div>
+									</div>
+									<div class="card-body" style="display: none;">
+										<div class="row justify-content-between">
+											<label class="col-sm-3 col-form-label text-sm-right"
+												id="labUser_Name_Created_Text">User name created: </label>
+											<label class="col-sm-3 col-form-label" id="labUser_Name_Created_Value">User
+												name created: </label>
+											<label class="col-sm-3 col-form-label text-sm-right"
+												id="labDateTime_Created_Text">Datetime created: </label>
+											<label class="col-sm-3 col-form-label"
+												id="labDateTime_Created_Value">Datetime created:</label>
+											<label class="col-sm-3 col-form-label text-sm-right"
+												id="labUser_Name_Modified_Text">User name modifiedd: </label>
+											<label class="col-sm-3 col-form-label" id="labUser_Name_Modified_Value">User
+												name modifiedd: </label>
+											<label class="col-sm-3 col-form-label text-sm-right"
+												id="labDateTime_Modified_Text">DateTime modified: </label>
+											<label class="col-sm-3 col-form-label"
+												id="labDateTime_Modified_Value">DateTime modified: </label>
+										</div>
+									</div>
+
+								</div>
+								<!-- ================= End Other information ==================== -->
+							</div> <!-- End <div class="modal-content">  -->
+						</div>
+					</div>
+					<!-- ================ End Modal From ============================= -->
+
+					<div class="card card-info card-outline">
+						<div class="card-header">
+							<h4 class="card-title">List data &nbsp;</h4>
+							<!-- //===========================================-->
+							<div class="button-group card-title">
+								<button type="button" class="btn btn-default btn-sm dropdown-toggle"
+									data-toggle="dropdown">
+									<span class="fas fa-cog"></span>
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" style="width: 300px;">
+									<li>
+										<a href="#" class="small" data-value="Id" tabIndex="-1">
+											<input type="checkbox" id="ckhShowColumnId" />&nbsp;
+											<label id="labId_CheckboxShow">Id </label>
+										</a> &nbsp; &nbsp;
+										<a href="#" class="small" data-value="LogSubjectId" tabIndex="-1">
+											<input type="checkbox" id="ckhShowColumnLogSubjectId" />&nbsp;
+											<label id="labLogSubjectId_CheckboxShow">Subject </label>
+										</a>
+									</li>
+									<li>
+										<a href="#" class="small" data-value="Title" tabIndex="-1">
+											<input type="checkbox" id="ckhShowColumnTitle" />&nbsp;
+											<label id="labTitle_CheckboxShow">Title </label>
+										</a> &nbsp; &nbsp;
+										<a href="#" class="small" data-value="Image" tabIndex="-1">
+											<input type="checkbox" id="ckhShowColumnImage" />&nbsp;
+											<label id="labImage_CheckboxShow">Image </label>
+										</a>
+									</li>
+									<li>
+										<a href="#" class="small" data-value="Content_Exchange" tabIndex="-1">
+											<input type="checkbox" id="ckhShowColumnContent_Exchange" />&nbsp;
+											<label id="labContent_Exchange_CheckboxShow">Content </label>
+										</a> &nbsp; &nbsp;
+									</li>
+									<li>
+										<a href="#" class="small" data-value="Status_Processed" tabIndex="-1">
+											<input type="checkbox" id="ckhShowColumnStatus_Processed" />&nbsp;
+											<label id="labStatus_Processed_CheckboxShow">Status Processed </label>
+										</a> &nbsp; &nbsp;
+									</li>
+								</ul>
+							</div>
+							<!-- //=========================================================== -->
+							<div class="card-tools">
+								<button type="button" class="btn btn-tool" data-card-widget="collapse"
+									data-toggle="tooltip" title="Collapse"><i class="fas fa-minus"></i></button>
+							</div>
+						</div>
+						<div class="card-body">
+							<table id="tableSys_Exchange_Log_Content"
+								class="table table-bordered table-hover btn-table mb-0">
+								<thead>
+									<tr>
+										<th class="text-center">
+											<div class="custom-control custom-checkbox">
+												<input class="custom-control-input cbAll" type="checkbox"
+													id="check-all">
+												<label for="check-all" class="custom-control-label"></label>
+											</div>
+										</th>
+										<th class="text-center" data-sort="" data-column="Id" class="columnHeader"
+											onclick="sortByColumn(this)">
+											<label id="labId_tb">
+												Id <i class="fa fa-fw" data-column="Id"></i>
+											</label>
+										</th>
+										<th class="text-center" data-sort="" data-column="LogSubjectId"
+											class="columnHeader" onclick="sortByColumn(this)">
+											<label id="labLogSubjectId_tb">
+												Subject <i class="fa fa-fw" data-column="LogSubjectId"></i>
+											</label>
+										</th>
+										<th class="text-center" data-sort="" data-column="Title" class="columnHeader"
+											onclick="sortByColumn(this)">
+											<label id="labTitle_tb">
+												Title <i class="fa fa-fw" data-column="Title"></i>
+											</label>
+										</th>
+										<th class="text-center" data-sort="" data-column="Image" class="columnHeader"
+											onclick="sortByColumn(this)">
+											<label id="labImage_tb">
+												Image <i class="fa fa-fw" data-column="Image"></i>
+											</label>
+										</th>
+										<th class="text-center" data-sort="" data-column="Content_Exchange"
+											class="columnHeader" onclick="sortByColumn(this)">
+											<label id="labContent_Exchange_tb">
+												Content <i class="fa fa-fw" data-column="Content_Exchange"></i>
+											</label>
+										</th>
+										<th class="text-center" data-sort="" data-column="Status_Processed"
+											class="columnHeader" onclick="sortByColumn(this)">
+											<label id="labStatus_Processed_tb">
+												Status Processed <i class="fa fa-fw" data-column="Status_Processed"></i>
+											</label>
+										</th>
+										<th class="text-center">Action</a></th>
+									</tr>
+								</thead>
+								<tbody id="bodyTableSys_Exchange_Log_Content">
+									<tr>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+										<th class="text-center"></a></th>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-xs-1 col-sm-1">Quantity per page:</div>
+						<div class="col-xs-1 col-sm-1">
+							<input type="number" class="form-control form-control-sm" name="numberItemPerPage"
+								id="numberItemPerPage" size="4">
+						</div>
+						<div class="col-xs-9 col-sm-9" id="paginationSys_Exchange_Log_Content">
+						</div>
+					</div>
+			</div>
+			<script type="application/javascript">
+				var language={};
+				var listData;
+				var linkPrefix=$('#linkPrefix').val();
+				var idMainTable="tableSys_Exchange_Log_Content";
+				setSelectedColumnToShowInterface(idMainTable);
+
+				onLoadData();
+				function onLoadData() {
+					getLanguage();
+					setUpdateButtonStatus(false)
+					setInterfaceText();
+					getNumberItemPerPage();
+					var strData=$('#listData').val();
+					console.log(strData);
+					listData=JSON.parse(strData);
+					if(listData.length>0) {
+						displayDataToTable();
+						var paramsString=$('#params').val();
+						const params=JSON.parse(paramsString);
+						paginationHelper(params.pagination,"Sys_Exchange_Log_Content",params.currentStatus,params.keyword,linkPrefix,"paginationSys_Exchange_Log_Content");
+					}
+				}
+
+				function displayDataToTable() {
+					sortDataJson();
+					showAllColumnInTable(idMainTable);
+					link=createLinkImage("Sys_Exchange_Log_Content");
+					var table=document.getElementById("bodyTableSys_Exchange_Log_Content");
+					var lengthtable=table.rows.length-1;
+					for(var n=lengthtable;n>=0;n--) {
+						table.deleteRow(n);
+					}
+					var length=listData.length;
+					if(length<1) {
+						showNoticeDanger(language.Message_NotFoundData);
+						return false;
+					}
+					$("#modaMainForm").modal('hide');
+					listData.forEach(function(data) {
+						var row=table.insertRow(0);
+						var cell0=row.insertCell(0);
+						var cell1=row.insertCell(1);
+						var cell2=row.insertCell(2);
+						var cell3=row.insertCell(3);
+						var cell4=row.insertCell(4);
+						var cell5=row.insertCell(5);
+						var cell6=row.insertCell(6);
+						var cell7=row.insertCell(7);
+						let check=`<div class="custom-control custom-checkbox"> 
+				<input class="custom-control-input" type="checkbox" name="chkListData" id="${data.Id}" value="${data.Id}">
+				<label for="${data.Id}" class="custom-control-label"></label>
+			</div>`;
+						cell0.innerHTML=check;
+						cell1.innerHTML=data.Id;
+						cell2.innerHTML=data.Name;
+						cell3.innerHTML=data.Title;
+						//1. display value
+						//cell4.innerHTML = data.Image;
+						//2. display image
+						//cell4.innerHTML = `<img src="${link}${data.Image}" alt="" width="100" >`;
+						//3. display full link
+						//cell4.innerHTML = `${link}${data.Image}`;
+						//4. display download file
+						cell4.innerHTML=`<a href="${link}${data.Image}" target="_blank">Download</a>`;
+						cell5.innerHTML=data.Content_Exchange;
+						cell6.innerHTML=data.Status_Processed;
+						let strbutton=" <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+							"<i class=\"fas fa-pencil-alt\"></i>"+
+							"</a> "+
+							" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,"+data.Id+",'"+data.Title+"')\">";
+						strbutton+=" <i class=\"fas fa-trash-alt\"></i> ";
+						strbutton+=" </ button > ";
+						cell7.innerHTML=strbutton;
+					});
+					hideColumnInTable(idMainTable);
+				}
+				function setUpdateButtonStatus(statusUpdate) {
+					$('#btnSave').prop('hidden',statusUpdate);
+					$('#btnUpdate').prop('hidden',!statusUpdate);
+				}
+
+				function getLanguage() {
+					var languageString=$('#sysLanguage').val();
+					language=JSON.parse(languageString);
+				}
+
+				function setInterfaceText() {
+					$("#pageTitle").html(language.TitlePage);
+					$("#labId").text(language.Id);
+					$("#labLogSubjectId").text(language.LogSubjectId);
+					$("#labTitle").text(language.Title);
+					$("#labImage").text(language.Image);
+					$("#labContent_Exchange").text(language.Content_Exchange);
+					$("#labStatus_Processed").text(language.Status_Processed);
+
+					$("#labId_tb").html(language.Id+"<i class=\"fa fa-fw\" data-column=\"Id\"></i>");
+					$("#labLogSubjectId_tb").html(language.LogSubjectId+"<i class=\"fa fa-fw\" data-column=\"LogSubjectId\"></i>");
+					$("#labTitle_tb").html(language.Title+"<i class=\"fa fa-fw\" data-column=\"Title\"></i>");
+					$("#labImage_tb").html(language.Image+"<i class=\"fa fa-fw\" data-column=\"Image\"></i>");
+					$("#labContent_Exchange_tb").html(language.Content_Exchange+"<i class=\"fa fa-fw\" data-column=\"Content_Exchange\"></i>");
+					$("#labStatus_Processed_tb").html(language.Status_Processed+"<i class=\"fa fa-fw\" data-column=\"Status_Processed\"></i>");
+
+					$("#labId_CheckboxShow").text(language.Id);
+					$("#labLogSubjectId_CheckboxShow").text(language.LogSubjectId);
+					$("#labTitle_CheckboxShow").text(language.Title);
+					$("#labImage_CheckboxShow").text(language.Image);
+					$("#labContent_Exchange_CheckboxShow").text(language.Content_Exchange);
+					$("#labStatus_Processed_CheckboxShow").text(language.Status_Processed);
+				}
+
+				createDataForDropdownLists();
+				function createDataForDropdownLists() {
+					var strCatalogue=$('#listDataCatalogue').val();
+					arrCatalogue=JSON.parse(strCatalogue);
+					console.log(arrCatalogue);
+					createDataForDropdown(arrCatalogue[1],'LogSubjectId','Id','Name','Name','-- Chose --');
+				}
+
+				closeAllDropdown();
+				function closeAllDropdown() {
+					var DivContenName=document.getElementById('DivContenName');
+					DivContenName.hidden=true;
+
+				}
+
+				function getById(Id) {
+					var link=linkPrefix+'getById/'+Id;
+					$.ajax({
+						type: 'GET',
+						url: link,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							if(success==true) {
+								showDataToForm(resultdata.data);
+							}
+						},
+						failure: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+						error: function(response) {
+							alert(language.Message_GetItemByIdError);
+						},
+					});
+				}
+
+				function showDataToForm(data) {
+					try {
+						setUpdateButtonStatus(true);
+						$("#modaMainForm").modal('show');
+						$('#IdHidden').val(data.Id);
+						$('#Id').val(data.Id);
+						$('#LogSubjectId').val(data.LogSubjectId);
+						$('#Name').val(data.Name);
+						$('#Title').val(data.Title);
+						$('#Image_old').val(data.Image);
+						$('#Content_Exchange').val(data.Content_Exchange);
+						$('#Status_Processed').val(data.Status_Processed);
+
+						$('#labUser_Name_Created_Value').text(data.User_Name_Created);
+						$('#labDateTime_Created_Value').text(data.DateTime_Created);
+						$('#labUser_Name_Modified_Value').text(data.User_Name_Modified);
+						$('#labDateTime_Modified_Value').text(data.DateTime_Modified);
+					}
+					catch(error) {}
+				}
+
+				$('#btnOpenMainModalForm').click(function() {
+					$("#modaMainForm").modal('show');
+					clearForm();
+				});
+
+				$('#btnSearchPost_OpenForm').click(function() {
+					$("#modaMainForm").modal('show');
+				});
+
+				$('#btnExport_OpenForm').click(function() {
+					$("#modaMainForm").modal('show');
+				});
+
+				function clearForm() {
+					try {
+						$('#IdHidden').val('');
+						setUpdateButtonStatus(false)
+						$('#Id').val('');
+						$('#LogSubjectId').val('');
+						$('#Name').val('');
+						$('#Title').val('');
+						$('#Image').val('');
+						$('#Content_Exchange').val('');
+						$('#Status_Processed').val('');
+					}
+					catch(error) {}
+				}
+
+				$('#btnSearchPost').click(function() {
+					$(this).prop('disabled',true);
+					getContentPages(1);
+				});
+
+				function getContentPages(page) {
+					var sortStorage=getSortType(linkPrefix);
+					let data={
+						Title: $('#Title').val(),
+						Image: $('#Image').val(),
+						Content_Exchange: $('#Content_Exchange').val(),
+						Status_Processed: $('#Status_Processed').val(),
+						Page: page,
+						sortColumn: sortStorage.sortColumn,
+						sortType: sortStorage.sortType,
+						numberItemPerPage: $('#numberItemPerPage').val()
+					}
+					var link=linkPrefix+'search';
+					$.ajax({
+						type: 'POST',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							$('#btnSearchPost').prop('disabled',false);
+							listData=resultdata.data;
+							displayDataToTable();
+							let params=resultdata.params;
+							paginationHelper(params.pagination,"Sys_Exchange_Log_Content","","",linkPrefix,"paginationSys_Exchange_Log_Content");
+
+							if(params.pagination.totalItems>0) {
+								var message=language.Message_Find+params.pagination.totalItems+language.Message_Words_records;
+								showNoticeSuccess(message);
+							}
+						},
+						failure: function(response) {
+							$('#btnSearchPost').prop('disabled',false);
+							showNoticeDanger('Search Error');
+						},
+						error: function(response) {
+							$('#btnSearchPost').prop('disabled',false);
+							showNoticeDanger('Search Error');
+						}
+					});
+					$('#btnSearchPost').prop('disabled',false);
+				}
+
+				$('#btnSave').click(function() {
+					$(this).prop('disabled',true);
+					chekValueAndSubmit();
+					$(this).prop('disabled',false);
+				});
+
+				$('#btnSaveAs').click(function() {
+					$(this).prop('disabled',true);
+					$('#IdHidden').val('');
+					$('#Id').val('');
+					chekValueAndSubmit();
+					$(this).prop('disabled',false);
+				});
+
+				function chekValueAndSubmit() {
+					if(($('#Title').val().length<5)||($('#Title').val().length>150)) {
+						var message=formatMessage(language.Title+": "+language.Message_Invalid_Title,'5','150');
+						alert(message);
+						return false;
+					}
+					if(($('#Content_Exchange').val().length<10)||($('#Content_Exchange').val().length>1000)) {
+						var message=formatMessage(language.Content_Exchange+": "+language.Message_Invalid_Content_Exchange,'10','1000');
+						alert(message);
+						return false;
+					}
+					document.getElementById("formSys_Exchange_Log_Content").submit();
+				}
+
+				function getDataForm() {
+					if(($('#Title').val().length<5)||($('#Title').val().length>150)) {
+						var message=formatMessage(language.Title+": "+language.Message_Invalid_Title,'5','150');
+						alert(message);
+						return false;
+					}
+					if(($('#Content_Exchange').val().length<10)||($('#Content_Exchange').val().length>1000)) {
+						var message=formatMessage(language.Content_Exchange+": "+language.Message_Invalid_Content_Exchange,'10','1000');
+						alert(message);
+						return false;
+					}
+					return {
+						'IdHidden': $('#IdHidden').val(),
+						'Id': $('#Id').val(),
+						'LogSubjectId': $('#LogSubjectId').val(),
+						'Title': $('#Title').val(),
+						'Image': $('#Image').val(),
+						'Content_Exchange': $('#Content_Exchange').val(),
+						'Status_Processed': $('#Status_Processed').val(),
+					}
+				}
+
+				function saveInsert() {
+					let data=getDataForm();
+					if(data==false) {
+						$('#btnSave').prop('disabled',false);
+						return false;
+					}
+					var link=linkPrefix+'save';
+					$.ajax({
+						type: 'post',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false))
+								showNoticeDanger(language.Message_AddNewError+' ('+response.message+')');
+							else if((success!=true)&&(success!='true'))
+								showNoticeDanger(result.message);
+							else {
+								insertRow(result.data);
+								clearForm();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_AddNewError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_AddNewError);
+						},
+					});
+					$('#btnSave').prop('disabled',false);
+				}
+
+				function insertRow(data) {
+					showAllColumnInTable(idMainTable);
+					showNoticeSuccess(language.Message_AddNewSuccess);
+					var table=document.getElementById("bodyTableSys_Exchange_Log_Content");
+					var row=table.insertRow(0);
+					var cell0=row.insertCell(0);
+					var cell1=row.insertCell(1);
+					var cell2=row.insertCell(2);
+					var cell3=row.insertCell(3);
+					var cell4=row.insertCell(4);
+					var cell5=row.insertCell(5);
+					var cell6=row.insertCell(6);
+					var cell7=row.insertCell(7);
+					let check=`<div class="custom-control custom-checkbox"> 
+					<input class="custom-control-input" type="checkbox" name="chkListData" id="${data.Id}" value="${data.Id}">
+					<label for="${data.Id}" class="custom-control-label"></label>
+				</div>`;
+					cell0.innerHTML=check;
+					cell1.innerHTML=data.Id;
+					if(data.LogSubjectId==$('#LogSubjectId').val()) {
+						cell2.innerHTML=$('#Name').val();
+					}
+					cell3.innerHTML=data.Title;
+					cell4.innerHTML=data.Image;
+					cell5.innerHTML=data.Content_Exchange;
+					cell6.innerHTML=data.Status_Processed;
+					let strbutton=" <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						"<i class=\"fas fa-pencil-alt\"></i>"+
+						"</a> "+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,"+data.Id+",'"+data.Title+"')\">";
+					strbutton+=" <i class=\"fas fa-trash-alt\"></i> ";
+					strbutton+=" </ button > ";
+					cell7.innerHTML=strbutton;
+					hideColumnInTable(idMainTable);
+				}
+
+				$('#btnUpdate').click(function() {
+					$(this).prop('disabled',true);
+					chekValueAndSubmit();
+					$(this).prop('disabled',false);
+				});
+
+				function saveUpdate() {
+					let data=getDataForm();
+					if(data==false) {
+						$('#btnUpdate').prop('disabled',false);
+						return false;
+					}
+					if(data.IdHidden=="") {
+						$('#btnUpdate').prop('disabled',false);
+						showNoticeDanger(language.Message_HaveNotSelectedItemUpdate);
+						return false;
+					}
+					var link=linkPrefix+'update';
+					$.ajax({
+						type: 'put',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(response) {
+							var success=response.success;
+							var result=response.data;
+							if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_UpdateError);
+								return false;
+							}
+							else if((success!=true)&&(success!='true')) {
+								showNoticeDanger(result.message);
+								return false;
+							}
+							else {
+								updateRow(result.data);
+								clearForm();
+							}
+						},
+						failure: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						},
+						error: function(response) {
+							showErrorMessageSave(response,language.Message_UpdateError);
+						}
+					});
+					$('#btnUpdate').prop('disabled',false);
+				}
+
+				function updateRow(data) {
+					showNoticeSuccess(language.Message_UpdateSuccess);
+					showAllColumnInTable(idMainTable);
+					$("#modaMainForm").modal('hide');
+					var row=$("#tableSys_Exchange_Log_Content button[data-id='"+data.Id+"']").parents("tr")[0];
+					var tr="<tr>"+
+						"<td class=\"text-center\">"+
+						"<div class=\"custom-control custom-checkbox\">"+
+						"<input class=\"custom-control-input\" type=\"checkbox\" name=\"chkListData\" id=\""+data.Id+"\" value=\""+data.Id+"\"> "+
+						"<label for=\""+data.Id+"\" class=\"custom-control-label\"></label> "+
+						"</div>"+
+						"</td>";
+					tr+="<td class=\"text-center\">"+data.Id+"</td>";
+					if(data.LogSubjectId==$('#LogSubjectId').val()) {
+						tr+="<td class=\"text-center\">"+$('#Name').val()+"</td>";
+					}
+					tr+="<td class=\"text-center\">"+data.Title+"</td>";
+					tr+="<td class=\"text-center\">"+data.Image+"</td>";
+					tr+="<td class=\"text-center\">"+data.Content_Exchange+"</td>";
+					tr+="<td class=\"text-center\">"+data.Status_Processed+"</td>";
+					tr+="<td class=\"text-center\">"+
+						" <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">"+
+						" <i class=\"fas fa-pencil-alt\"></i>"+
+						" </a>"+
+						" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,'"+data.Id+"','"+data.Title+"')\">"+
+						" <i class=\"fas fa-trash-alt\"></i> "+
+						" </button> "+
+						" </td>"+
+						" </tr>";
+					$(row).after(tr);
+					$(row).remove();
+					hideColumnInTable(idMainTable);
+				}
+				function deleteById(row,objectId,objectName) {
+					var message=language.Message_DoYouWantToDeleteById+' '+objectId+' ('+objectName+')? ';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={
+						'Id': objectId
+					};
+					var link=linkPrefix+'deleteById';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var success=resultdata.success;
+							var message=resultdata.message;
+							var notice={};
+							if((success=='true')||(success==true)) {
+								showNoticeSuccess(language.Message_DeleteSuccess);
+								var i=row.parentNode.parentNode.rowIndex;
+								document.getElementById("tableSys_Exchange_Log_Content").deleteRow(i);
+								return true;
+							}
+							else if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+							else if(message.length>10) {
+								showNoticeDanger(message);
+								return false;
+							}
+							else {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+				$('#btnDelete').click(function() {
+					$(this).prop('disabled',true);
+					deleteList();
+					$(this).prop('disabled',false);
+				});
+				function deleteList() {
+					var arrayId=[];
+					var listId=" ";
+					$("input:checkbox[name=chkListData]:checked").each(function() {
+						arrayId.push($(this).val());
+						listId+=$(this).val()+',';
+					});
+					let message=language.Message_DoYouWantToDeleteInTheList+' '+listId+'?';
+					var answer=confirm(message)
+					if(!answer) {return false;}
+					let data={arrayId};
+					var link=linkPrefix+'deleteList';
+					$.ajax({
+						type: 'delete',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							var result=resultdata.data;
+							var success=result.success;
+							var message=result.message;
+							if((success=='true')||(success==true)) {
+								let deleteSuccess=result.deleteSuccess;
+								let deleteError=result.deleteError;
+								if(deleteSuccess.length>0) {
+									let message=language.Message_DeleteSuccess;
+									message+=" "+deleteSuccess.toString();
+									if(deleteError.length>0) {
+										message+=" \n"+language.Message_DeleteFail+" "+deleteError.toString();
+									}
+									showNoticeSuccess(message);
+									deleteRows(arrayId,"bodyTableSys_Exchange_Log_Content");
+									return true;
+								}
+								else if(deleteError.length>0) {
+									let message=language.Message_DeleteFail+" "+deleteError.toString();
+									showNoticeDanger(message);
+								}
+								else {
+									showNoticeDanger(language.Message_DeleteFail);
+								}
+							}
+							else if((success=='false')||(success==false)) {
+								showNoticeDanger(language.Message_DeleteFail);
+								return false;
+							}
+						},
+						failure: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						},
+						error: function(response) {
+							showNoticeDanger(language.Message_DeleteFail);
+						}
+					});
+				}
+
+				$('#btnExport').click(function() {
+					$(this).prop('disabled',true);
+					exportData();
+					$(this).prop('disabled',false);
+				});
+
+				function exportData() {
+					let data={
+						'Title': $('#Title').val(),
+						'Image': $('#Image').val(),
+						'Content_Exchange': $('#Content_Exchange').val(),
+						'Status_Processed': $('#Status_Processed').val(),
+					}
+					var link=linkPrefix+'exportData';
+					$.ajax({
+						type: 'post',
+						url: link,
+						data: data,
+						dataType: "json",
+						success: function(resultdata) {
+							$('#btnExport').prop('disabled',false);
+							let result=resultdata.data;
+							showNoticeSuccess(language.Message_CompletedGetData);
+							ExportToExcel(result);
+						},
+						failure: function(response) {
+							$('#btnExport').prop('disabled',false);
+							showNoticeDanger('Export Error');
+						},
+						error: function(response) {
+							$('#btnExport').prop('disabled',false);
+							showNoticeDanger('Export Error');
+						}
+					});
+					$('#btnExport').prop('disabled',false);
+				}
+
+				function ExportToExcel(datas) {
+					let itemCount=datas.length;
+					if(itemCount>1000) {
+						showNoticeDanger(language.Message_WarningWhenExportingDataTooMuch);
+					}
+					if(itemCount<1) {
+						showNoticeDanger(language.Message_NotFoundData);
+					}
+					var strTable='<style type="text/css">';
+					strTable+=' .Border { ';
+					strTable+='         color: windowtext; ';
+					strTable+='         font-size: 11.0pt; ';
+					strTable+='         word-break:break-all;';
+					strTable+='         font-style: normal; ';
+					strTable+='         text-decoration: none; ';
+					strTable+='         font-family: "Times New Roman", serif; ';
+					strTable+='         text-align: left; ';
+					strTable+='         vertical-align: bottom;';
+					strTable+='         border-left: .5pt solid windowtext; ';
+					strTable+='         border-right: .5pt solid windowtext; ';
+					strTable+='         border-top: .5pt solid windowtext; ';
+					strTable+='         border-bottom: .5pt solid windowtext; ';
+					strTable+='         padding-left: 1px; ';
+					strTable+='         padding-right: 1px; ';
+					strTable+='         padding-top: 1px; ';
+					strTable+='     } ';
+
+					strTable+=' .BorderHeader { ';
+					strTable+='        color: white; ';
+					strTable+='         background-color:#0026ff; ';
+					strTable+='        font-size: 11.0pt; ';
+					strTable+='        text-align: center; ';
+					strTable+='        font-style: normal; ';
+					strTable+='        text-decoration: none; ';
+					strTable+='        font-family: "Times New Roman", serif; ';
+					strTable+='        vertical-align: bottom;';
+					strTable+='        border-left: .5pt solid windowtext; ';
+					strTable+='        border-right: .5pt solid windowtext; ';
+					strTable+='        border-top: .5pt solid windowtext; ';
+					strTable+='        border-bottom: .5pt solid windowtext; ';
+					strTable+='        padding-left: 1px; ';
+					strTable+='        padding-right: 1px; ';
+					strTable+='        padding-top: 1px; ';
+					strTable+='     } ';
+					strTable+='  </style> ';
+					strTable+=' <table id="testTable"  border="1" frame="hsides" rules="groups" summary="Code page support in different versions of MS Windows."> ';
+					strTable+='<tr class="BorderHeader" style="background - color:#0026ff; color:#fff"> ';
+					strTable+='<th class="BorderHeader" >Order</th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Id </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Subject </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Title </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Image </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Content </th> ';
+					strTable+='<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Status Processed </th> ';
+					strTable+='</tr> ';
+					var n=0;
+					var currentRow=4;
+					for(var i=0;i<itemCount;i++) {
+						var vTemp=datas[i];
+						currentRow+=1;
+						n+=1;
+						strTable+='<tr >';
+						strTable+='<th class="Border" > '+n+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Id+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.LogSubjectId+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Title+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Image+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Content_Exchange+' </th> ';
+						strTable+='<th  class="Border" > '+vTemp.Status_Processed+' </th> ';
+						strTable+='</tr>';
+					}
+					strTable+=' </table> ';
+					ExportHtmlToExcel(strTable,'Sys_Exchange_Log_Content');
+					showNoticeSuccess(language.Message_ExportSuccess);
+				}
+
+			</script>

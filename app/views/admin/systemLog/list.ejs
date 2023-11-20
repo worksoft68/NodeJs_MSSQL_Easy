@@ -1,0 +1,688 @@
+<%- include ('./../helpers/pagination') %>
+<%
+	const collection = "systemLog";
+	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`; 
+%>
+<%- include ('./../elements/notify') %>
+<div class="container-fluid">
+	<input name="linkPrefix" id="linkPrefix" type="hidden" value="<%= linkPrefix %>">
+	<input name="params" id="params" type="hidden" value="<%= params %>">
+	<div class="card card-info card-outline">
+		<div class="card-header">
+			 <h6 class="card-title">Form</h6>
+			<div class="card-tools">
+				<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+					<i class="fas fa-minus"></i>
+				</button>
+			</div>
+		</div>
+		<div class="card-body" style="display: block;">
+			<form role="form" name="formSystemLog" id="formSystemLog"  action =" <%= linkPrefix %>searchGet" method="get">
+				<div class="form-group row">
+					<label id="labId" class="col-sm-2 col-form-label text-sm-right ">Id</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="number" readonly name="Id"  id="Id" value="<%= item.Id %>" class="form-control form-control-sm">
+					</div>
+					<label id="labAction" class="col-sm-2 col-form-label text-sm-right ">Action</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="text"  name="Action"  id="Action"  value="<%= item.Action %>" class="form-control form-control-sm">
+					</div>
+					<label id="labImpactZone" class="col-sm-2 col-form-label text-sm-right ">Impact Zone</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="text"  name="ImpactZone"  id="ImpactZone"  value="<%= item.ImpactZone %>" class="form-control form-control-sm">
+					</div>
+					<label id="labIdTable" class="col-sm-2 col-form-label text-sm-right ">Id Table</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="text"  name="IdTable"  id="IdTable"  value="<%= item.IdTable %>" class="form-control form-control-sm">
+					</div>
+					<label id="labContentLog" class="col-sm-2 col-form-label text-sm-right ">Content Log</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="text"  name="ContentLog"  id="ContentLog"  value="<%= item.ContentLog %>" class="form-control form-control-sm">
+					</div>
+					<label id="labContentLogMax" class="col-sm-2 col-form-label text-sm-right ">Content Log Max</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="text"  name="ContentLogMax"  id="ContentLogMax"  value="<%= item.ContentLogMax %>" class="form-control form-control-sm">
+					</div>
+					<label id="labUserId" class="col-sm-2 col-form-label text-sm-right ">User Id</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="number"  name="UserId"  id="UserId" value="<%= item.UserId %>" class="form-control form-control-sm">
+					</div>
+					<label id="labFullName" class="col-sm-2 col-form-label text-sm-right ">Fullname</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="text"  name="FullName"  id="FullName"  value="<%= item.FullName %>" class="form-control form-control-sm">
+					</div>
+					<label id="labDateTimeLog" class="col-sm-2 col-form-label text-sm-right ">DateTime Log</label>
+					<div class="col-xs-2 col-sm-2">
+						<input type="date" name="DateTimeLog"  id="DateTimeLog"  class="form-control form-control-sm">
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-xs-2 col-sm-2"></div>
+					<div class="col-xs-10 col-sm-10">
+						
+						&nbsp; <button type="button" id = "btnDelete" class="btn-sm btn-danger" title="Delete">
+							<i class="fas fa-trash-alt"></i> Delete
+						</button>
+						&nbsp; <button type="button" id = "btnSearchPost" class="btn-sm btn-primary" title="Search">
+							<i class="fa fa-search"></i> Search
+						</button>						
+						&nbsp; <button type="button" id = "btnExport" class="btn-sm btn-success" title="Export">
+							<i class="fa fa-download"></i> Export
+						</button>
+						&nbsp; <button type="button" id="btnRefreshPage" class="btn-sm btn-warning" title="Refresh" onclick="RefreshPage()">
+							<i class="fa fa-refresh"></i> Refresh
+						</button>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class = "text-success" id = "divMessage"></div>
+				</div>
+						<input name="IdHidden" id="IdHidden" type="hidden">
+			</form>
+						<input name="listData" id="listData" type="hidden" value="<%= itemString %>">
+						<input name="sysLanguage" id="sysLanguage" type="hidden" value="<%= language %>">
+		</div>
+	</div>
+	<div class="card card-info card-outline">
+		<div class="card-header">
+			<h4 class="card-title">List data &nbsp;</h4>
+			<!-- //===========================================-->
+			<div class="button-group card-title">
+				<button type="button" class="btn btn-default btn-sm dropdown-toggle"
+					data-toggle="dropdown">
+					<span class="fas fa-cog"></span>
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" style="width: 300px;">
+					<li>
+						<a href="#" class="small" data-value="Id" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnId" />&nbsp;
+							<label id="labId_CheckboxShow">Id </label>
+						</a> &nbsp; &nbsp;
+						<a href="#" class="small" data-value="Action" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnAction" />&nbsp;
+							<label id="labAction_CheckboxShow">Action </label>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="small" data-value="ImpactZone" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnImpactZone" />&nbsp;
+							<label id="labImpactZone_CheckboxShow">Impact Zone </label>
+						</a> &nbsp; &nbsp;
+						<a href="#" class="small" data-value="IdTable" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnIdTable" />&nbsp;
+							<label id="labIdTable_CheckboxShow">Id Table </label>
+						</a>
+					</li>
+					
+					<li>
+						<a href="#" class="small" data-value="UserId" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnUserId" />&nbsp;
+							<label id="labUserId_CheckboxShow">User Id </label>
+						</a> &nbsp; &nbsp;
+						<a href="#" class="small" data-value="FullName" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnFullName" />&nbsp;
+							<label id="labFullName_CheckboxShow">Fullname </label>
+						</a>
+					</li>
+					<li>
+						<a href="#" class="small" data-value="DateTimeLog" tabIndex="-1">
+							<input type="checkbox" id="ckhShowColumnDateTimeLog" />&nbsp;
+							<label id="labDateTimeLog_CheckboxShow">DateTime Log </label>
+						</a> &nbsp; &nbsp;
+					</li>
+				</ul>
+			</div>
+			<!-- //=========================================================== -->
+			<div class="card-tools">
+				<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fas fa-minus"></i></button>
+			</div>
+		</div>
+		<div class="card-body">
+			<table id="tableSystemLog" class="table table-bordered table-hover btn-table mb-0">
+				<thead>
+					<tr>
+						<th class="text-center">
+							<div class="custom-control custom-checkbox">
+								<input class="custom-control-input cbAll" type="checkbox" id="check-all">
+								<label for="check-all" class="custom-control-label"></label>
+							</div>
+						</th>
+						<th class="text-center" data-sort="" data-column="Id" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labId_tb">
+								Id <i class="fa fa-fw" data-column="Id"></i>
+							</label>
+						</th>
+						<th class="text-center" data-sort="" data-column="Action" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labAction_tb">
+								Action <i class="fa fa-fw" data-column="Action"></i>
+							</label>
+						</th>
+						<th class="text-center" data-sort="" data-column="ImpactZone" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labImpactZone_tb">
+								Impact Zone <i class="fa fa-fw" data-column="ImpactZone"></i>
+							</label>
+						</th>
+						<th class="text-center" data-sort="" data-column="IdTable" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labIdTable_tb">
+								Id Table <i class="fa fa-fw" data-column="IdTable"></i>
+							</label>
+						</th>						
+						<th class="text-center" data-sort="" data-column="UserId" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labUserId_tb">
+								User Id <i class="fa fa-fw" data-column="UserId"></i>
+							</label>
+						</th>
+						<th class="text-center" data-sort="" data-column="FullName" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labFullName_tb">
+								Fullname <i class="fa fa-fw" data-column="FullName"></i>
+							</label>
+						</th>
+						<th class="text-center" data-sort="" data-column="DateTimeLog" class="columnHeader" onclick="sortByColumn(this)">
+							<label id="labDateTimeLog_tb">
+								DateTime Log <i class="fa fa-fw" data-column="DateTimeLog"></i>
+							</label>
+						</th>
+						<th class="text-center">Action</a></th>
+					</tr>
+				</thead>
+				<tbody id="bodyTableSystemLog">
+					<tr>
+						<th class="text-center"></a></th>
+						<th class="text-center"></a></th>
+						<th class="text-center"></a></th>						
+						<th class="text-center"></a></th>
+						<th class="text-center"></a></th>
+						<th class="text-center"></a></th>
+						<th class="text-center"></a></th>
+						<th class="text-center"></a></th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-xs-1 col-sm-1">Quantity per page:</div>
+		<div class="col-xs-1 col-sm-1">
+			<input type="number" class="form-control form-control-sm" name="numberItemPerPage" id="numberItemPerPage" size="4">
+		</div>
+		<div class="col-xs-9 col-sm-9" id="paginationSystemLog">
+		</div>
+	</div>
+</div>
+<script type="application/javascript">
+var language = {};
+var listData;
+var linkPrefix=$('#linkPrefix').val();
+var idMainTable="tableSystemLog";
+setSelectedColumnToShowInterface(idMainTable);
+
+onLoadData();
+function onLoadData(){
+	getLanguage();
+	setUpdateButtonStatus(false)
+	setInterfaceText();
+	getNumberItemPerPage();
+	var strData = $('#listData').val();
+	listData = JSON.parse(strData);
+	if(listData.length>0){
+		displayDataToTable();
+		var paramsString = $('#params').val();
+		const params = JSON.parse(paramsString);
+		paginationHelper(params.pagination, "SystemLog", params.currentStatus, params.keyword,linkPrefix,  "paginationSystemLog");
+	}
+}
+
+function displayDataToTable(){
+	sortDataJson();
+	showAllColumnInTable(idMainTable);
+	var table = document.getElementById("bodyTableSystemLog");
+	var lengthtable= table.rows.length-1;
+	for(var n = lengthtable; n >= 0; n--) {
+		table.deleteRow(n);
+	}
+	var length = listData.length;
+	if(length <1 ) {
+		showNoticeDanger(language.Message_NotFoundData);
+		return false;
+	}
+
+	listData.forEach(function(data) {
+		var row = table.insertRow(0);
+		var cell0 = row.insertCell(0);
+		var cell1 = row.insertCell(1);
+		var cell2 = row.insertCell(2);
+		var cell3 = row.insertCell(3);
+		var cell4 = row.insertCell(4);
+		var cell5 = row.insertCell(5);
+		var cell6 = row.insertCell(6);
+		var cell7 = row.insertCell(7);
+		var cell8 = row.insertCell(8);
+		let check= `<div class="custom-control custom-checkbox"> 
+				<input class="custom-control-input" type="checkbox" name="chkListData" id="${data.Id}" value="${data.Id}">
+				<label for="${data.Id}" class="custom-control-label"></label>
+			</div>`;
+		cell0.innerHTML = check;
+		cell1.innerHTML = data.Id;
+		cell2.innerHTML = data.Action;
+		cell3.innerHTML = data.ImpactZone;
+		cell4.innerHTML = data.IdTable;		
+		cell5.innerHTML = data.UserId;
+		cell6.innerHTML = data.FullName;
+		cell7.innerHTML = data.DateTimeLog;
+		let strbutton = " <a  onclick=\"getById('"+data.Id+"')\" type=\"button\" class=\"rounded-circle btn btn-sm btn-info\" title=\"Edit\">" +
+			"<i class=\"fas fa-pencil-alt\"></i>" + 
+			"</a> " + 
+			" <button type=\"button\" class=\"rounded-circle btn btn-sm btn-danger\" data-id=\""+data.Id+"\" title=\"Delete\"  onclick=\"deleteById(this,"+data.Id+",'" + data.Action + "')\">";
+			strbutton += " <i class=\"fas fa-trash-alt\"></i> ";
+		strbutton += " </ button > ";
+		cell8.innerHTML = strbutton;
+	});
+	hideColumnInTable(idMainTable);
+}
+function setUpdateButtonStatus(statusUpdate){	
+	$('#btnSave').prop('hidden', statusUpdate);
+	$('#btnUpdate').prop('hidden', !statusUpdate);
+}
+
+function getLanguage(){
+	var languageString = $('#sysLanguage').val();	
+	language = JSON.parse(languageString);
+}
+
+function setInterfaceText(){
+	$("#pageTitle").html(language.TitlePage);
+	$("#labId").text(language.Id);
+	$("#labAction").text(language.Action);
+	$("#labImpactZone").text(language.ImpactZone);
+	$("#labIdTable").text(language.IdTable);
+	$("#labContentLog").text(language.ContentLog);
+	$("#labContentLogMax").text(language.ContentLogMax);
+	$("#labUserId").text(language.UserId);
+	$("#labFullName").text(language.FullName);
+	$("#labDateTimeLog").text(language.DateTimeLog);
+
+	$("#labId_tb").html(language.Id+"<i class=\"fa fa-fw\" data-column=\"Id\"></i>");
+	$("#labAction_tb").html(language.Action+"<i class=\"fa fa-fw\" data-column=\"Action\"></i>");
+	$("#labImpactZone_tb").html(language.ImpactZone+"<i class=\"fa fa-fw\" data-column=\"ImpactZone\"></i>");
+	$("#labIdTable_tb").html(language.IdTable+"<i class=\"fa fa-fw\" data-column=\"IdTable\"></i>");
+	
+	$("#labUserId_tb").html(language.UserId+"<i class=\"fa fa-fw\" data-column=\"UserId\"></i>");
+	$("#labFullName_tb").html(language.FullName+"<i class=\"fa fa-fw\" data-column=\"FullName\"></i>");
+	$("#labDateTimeLog_tb").html(language.DateTimeLog+"<i class=\"fa fa-fw\" data-column=\"DateTimeLog\"></i>");
+
+	$("#labId_CheckboxShow").text(language.Id);
+	$("#labAction_CheckboxShow").text(language.Action);
+	$("#labImpactZone_CheckboxShow").text(language.ImpactZone);
+	$("#labIdTable_CheckboxShow").text(language.IdTable);
+	
+	$("#labUserId_CheckboxShow").text(language.UserId);
+	$("#labFullName_CheckboxShow").text(language.FullName);
+	$("#labDateTimeLog_CheckboxShow").text(language.DateTimeLog);
+}
+
+function getById(Id){
+	var link = linkPrefix + 'getById/'+Id;
+	$.ajax({
+		type: 'GET',
+		url: link,
+		dataType: "json",
+		success: function(resultdata){
+			var success = resultdata.success;
+			if(success == true){
+				showDataToForm(resultdata.data);
+			}
+		},
+		failure: function (response) {
+			alert(language.Message_GetItemByIdError);
+		},
+		error: function (response) {
+			alert(language.Message_GetItemByIdError);
+		},
+	});
+}
+
+function showDataToForm(data){
+	try{
+		setUpdateButtonStatus(true);
+		$('#IdHidden').val(data.Id);
+		$('#Id').val(data.Id);
+		$('#Action').val(data.Action);
+		$('#ImpactZone').val(data.ImpactZone);
+		$('#IdTable').val(data.IdTable);
+		$('#ContentLog').val(data.ContentLog);
+		$('#ContentLogMax').val(data.ContentLogMax);
+		$('#UserId').val(data.UserId);
+		$('#FullName').val(data.FullName);
+		$('#DateTimeLog_old').val(getDate(data.DateTimeLog));			
+	}
+	catch(error){}
+}
+
+function clearForm(){
+	try{
+		$('#IdHidden').val('');
+		setUpdateButtonStatus(false)
+		$('#Id').val('');
+		$('#Action').val('');
+		$('#ImpactZone').val('');
+		$('#IdTable').val('');
+		$('#ContentLog').val('');
+		$('#ContentLogMax').val('');
+		$('#UserId').val('');
+		$('#FullName').val('');
+		$('#DateTimeLog').val('');
+	}
+	catch(error){}
+}
+
+$('#btnSearchPost').click(function(){
+	$(this).prop('disabled', true);
+	getContentPages(1);
+});
+
+function getContentPages(page){
+	var sortStorage=getSortType(linkPrefix);
+	let data = {
+		Action : $('#Action').val(),
+		ImpactZone : $('#ImpactZone').val(),
+		IdTable : $('#IdTable').val(),
+		ContentLog : $('#ContentLog').val(),
+		ContentLogMax : $('#ContentLogMax').val(),
+		FullName : $('#FullName').val(),
+		Page : page,
+		sortColumn: sortStorage.sortColumn,
+		sortType: sortStorage.sortType,
+		numberItemPerPage: $('#numberItemPerPage').val()
+	}
+	var link = linkPrefix + 'search';
+	$.ajax({
+		type: 'POST',
+		url: link,
+		data: data,
+		dataType: "json",
+		success: function(resultdata){
+			$('#btnSearchPost').prop('disabled', false);
+			listData = resultdata.data;
+			displayDataToTable();
+			let params = resultdata.params;
+			paginationHelper(params.pagination, "SystemLog", "", "", linkPrefix, "paginationSystemLog");
+
+			if(params.pagination.totalItems > 0 ) {
+				var message = language.Message_Find + params.pagination.totalItems + language.Message_Words_records;
+				showNoticeSuccess(message);
+			}
+		},
+		failure: function (response) {
+			$('#btnSearchPost').prop('disabled', false);
+			showNoticeDanger('Search Error');
+		},
+		error: function (response) {
+			$('#btnSearchPost').prop('disabled', false);
+			showNoticeDanger('Search Error');
+		}
+	});
+	$('#btnSearchPost').prop('disabled', false);
+}
+
+$('#btnSave').click(function(){
+	$(this).prop('disabled', true);
+	saveInsert();
+});
+
+$('#btnSaveAs').click(function(){
+	$(this).prop('disabled', true);
+	$('#IdHidden').val('');
+	$('#Id').val('');
+	saveInsert();
+	$(this).prop('disabled', false);
+});
+
+function chekValueAndSubmit(){
+	document.getElementById("formSystemLog").submit();
+}
+
+function getDataForm(){
+	return {
+		'IdHidden' : $('#IdHidden').val(),
+		'Id' : $('#Id').val(),
+		'Action' : $('#Action').val(),
+		'ImpactZone' : $('#ImpactZone').val(),
+		'IdTable' : $('#IdTable').val(),
+		'ContentLog' : $('#ContentLog').val(),
+		'ContentLogMax' : $('#ContentLogMax').val(),
+		'UserId' : $('#UserId').val(),
+		'FullName' : $('#FullName').val(),
+		'DateTimeLog' : $('#DateTimeLog').val(),
+	}
+}
+
+
+function deleteById(row, objectId, objectName){
+	var message=language.Message_DoYouWantToDeleteById + ' '+ objectId +' ('+objectName+')? ';
+	var answer = confirm(message)
+	if (!answer){	return false; } 
+	let data = {
+		'Id' : objectId
+	};
+	var link = linkPrefix+'deleteById';
+	$.ajax({
+		type	: 'delete',
+		url		: link,
+		data	: data,
+		dataType: "json",
+		success	: function(resultdata){
+			var success = resultdata.success;
+			var message = resultdata.message;
+			var notice 	= {};
+			if((success == 'true') || (success == true)){
+				showNoticeSuccess(language.Message_DeleteSuccess);
+				var i = row.parentNode.parentNode.rowIndex;
+				document.getElementById("tableSystemLog").deleteRow(i);
+				return true;
+			}
+			else if((success=='false')||(success==false)) {
+				showNoticeDanger(language.Message_DeleteFail);
+				return false;
+			}
+			else if(message.length > 10){
+				showNoticeDanger(message);
+				return false;
+			}
+			else {
+				showNoticeDanger(language.Message_DeleteFail);
+				return false;
+			}
+		},
+		failure: function (response) {
+			showNoticeDanger(language.Message_DeleteFail);
+		},
+		error: function (response) {
+			showNoticeDanger(language.Message_DeleteFail);
+		}
+	});
+}
+
+$('#btnDelete').click(function(){
+	$(this).prop('disabled', true);
+	deleteList();
+	$(this).prop('disabled', false);
+});
+function deleteList(){
+	var arrayId = [];
+	var listId 	= " ";
+	$("input:checkbox[name=chkListData]:checked").each(function(){
+		arrayId.push($(this).val());
+		listId += $(this).val() + ',';
+	});
+	let message =  language.Message_DoYouWantToDeleteInTheList  +' '+ listId+'?';
+	var answer = confirm(message)
+	if (!answer){	return false; } 
+	let data = { arrayId };
+	var link = linkPrefix+'deleteList';
+	$.ajax({
+		type	: 'delete',
+		url		: link,
+		data	: data,
+		dataType: "json",
+		success	: function(resultdata){
+			var result = resultdata.data;
+			var success = result.success;
+			var message = result.message;
+			if((success == 'true') || (success == true)){
+				let deleteSuccess = result.deleteSuccess;
+				let deleteError = result.deleteError;
+				if(deleteSuccess.length > 0){
+					let message = language.Message_DeleteSuccess;
+					message += " "+ deleteSuccess.toString();
+					if(deleteError.length > 0){
+						message += " \n"+  language.Message_DeleteFail + " "+ deleteError.toString();
+					}
+					showNoticeSuccess(message);
+					deleteRows(arrayId,"bodyTableSystemLog");
+					return true;
+				}
+				else if(deleteError.length > 0){
+					let message = language.Message_DeleteFail + " "+ deleteError.toString();
+					showNoticeDanger(message);
+				}
+				else{
+					showNoticeDanger(language.Message_DeleteFail);
+				}
+			}
+			else if((success == 'false') || (success == false)){
+				showNoticeDanger(language.Message_DeleteFail);
+				return false;
+			}
+		},
+		failure: function (response) {
+			showNoticeDanger(language.Message_DeleteFail);
+		},
+		error: function (response) {
+			showNoticeDanger(language.Message_DeleteFail);
+		}
+	});
+}
+
+$('#btnExport').click(function(){
+	$(this).prop('disabled', true);
+	exportData();
+	$(this).prop('disabled', false);
+});
+
+function exportData(){
+	let data = {
+		'Action' : $('#Action').val(),
+		'ImpactZone' : $('#ImpactZone').val(),
+		'IdTable' : $('#IdTable').val(),
+		'ContentLog' : $('#ContentLog').val(),
+		'ContentLogMax' : $('#ContentLogMax').val(),
+		'FullName' : $('#FullName').val(),
+	}
+	var link = linkPrefix + 'exportData';
+	$.ajax({
+		type: 'post',
+		url: link,
+		data: data,
+		dataType: "json",
+		success: function(resultdata){
+			$('#btnExport').prop('disabled', false);
+			let result = resultdata.data;
+			showNoticeSuccess(language.Message_CompletedGetData);
+			ExportToExcel(result);
+		},
+		failure: function (response) {
+			$('#btnExport').prop('disabled', false);
+			showNoticeDanger('Export Error');
+		},
+		error: function (response) {
+			$('#btnExport').prop('disabled', false);
+			showNoticeDanger('Export Error');
+		}
+	});
+	$('#btnExport').prop('disabled', false);
+}
+
+function ExportToExcel(datas){
+	let itemCount = datas.length; 
+	if(itemCount > 1000) {
+		showNoticeDanger(language.Message_WarningWhenExportingDataTooMuch);
+	}
+	if(itemCount < 1) {
+		showNoticeDanger(language.Message_NotFoundData);
+	}
+	var strTable = '<style type="text/css">';
+	strTable += ' .Border { ';
+	strTable += '         color: windowtext; ';
+	strTable += '         font-size: 11.0pt; ';
+	strTable += '         word-break:break-all;';
+	strTable += '         font-style: normal; ';
+	strTable += '         text-decoration: none; ';
+	strTable += '         font-family: "Times New Roman", serif; ';
+	strTable += '         text-align: left; ';
+	strTable += '         vertical-align: bottom;';
+	strTable += '         border-left: .5pt solid windowtext; ';
+	strTable += '         border-right: .5pt solid windowtext; ';
+	strTable += '         border-top: .5pt solid windowtext; ';
+	strTable += '         border-bottom: .5pt solid windowtext; ';
+	strTable += '         padding-left: 1px; ';
+	strTable += '         padding-right: 1px; ';
+	strTable += '         padding-top: 1px; ';
+	strTable += '     } ';
+
+	strTable += ' .BorderHeader { ';
+	strTable += '        color: white; ';
+	strTable += '         background-color:#0026ff; ';
+	strTable += '        font-size: 11.0pt; ';
+	strTable += '        text-align: center; ';
+	strTable += '        font-style: normal; ';
+	strTable += '        text-decoration: none; ';
+	strTable += '        font-family: "Times New Roman", serif; ';
+	strTable += '        vertical-align: bottom;';
+	strTable += '        border-left: .5pt solid windowtext; ';
+	strTable += '        border-right: .5pt solid windowtext; ';
+	strTable += '        border-top: .5pt solid windowtext; ';
+	strTable += '        border-bottom: .5pt solid windowtext; ';
+	strTable += '        padding-left: 1px; ';
+	strTable += '        padding-right: 1px; ';
+	strTable += '        padding-top: 1px; ';
+	strTable += '     } ';
+	strTable += '  </style> ';
+	strTable += ' <table id="testTable"  border="1" frame="hsides" rules="groups" summary="Code page support in different versions of MS Windows."> ';
+	strTable += '<tr class="BorderHeader" style="background - color:#0026ff; color:#fff"> ';
+	strTable += '<th class="BorderHeader" >Order</th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Id </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Action </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Impact Zone </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Id Table </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Content Log </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Content Log Max </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> User Id </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> Fullname </th> ';
+	strTable += '<th  class="BorderHeader" style="width: 100px; white - space:nowrap"> DateTime Log </th> ';
+	strTable += '</tr> ';
+	var n = 0;
+	var currentRow = 4;
+	for(var i = 0; i < itemCount; i++) {
+		var vTemp = datas[i];
+		currentRow += 1;
+		 n += 1;
+		strTable += '<tr >';
+		strTable += '<th class="Border" > ' + n + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.Id + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.Action + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.ImpactZone + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.IdTable + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.ContentLog + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.ContentLogMax + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.UserId + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.FullName + ' </th> ';
+		 strTable += '<th  class="Border" > ' + vTemp.DateTimeLog + ' </th> ';
+		strTable += '</tr>';
+	}
+	strTable += ' </table> ';
+	ExportHtmlToExcel(strTable, 'SystemLog');
+	showNoticeSuccess(language.Message_ExportSuccess);
+}
+
+</script>

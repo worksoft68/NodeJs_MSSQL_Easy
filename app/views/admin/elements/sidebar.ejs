@@ -1,0 +1,221 @@
+<aside class="main-sidebar sidebar-dark-info elevation-4">
+    <!-- Brand Logo -->
+    <a href="https://www.youtube.com/" class="brand-link">
+        <img src="admin/images/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8">
+        <span class="brand-text font-weight-light">NodeJs Easy</span>
+    </a>
+    <!-- https://fontawesome.com/v5/search?q=setting&o=r -->
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <% if((typeof userInfo !== 'undefined') && userInfo) {%>
+                <img src="<%=systemConfig.prefixUrl%>uploads/sys_User/<%= userInfo.Avatar %>"
+                    class="img-circle elevation-2" alt="User Image">
+                <%}%>
+                </div>
+
+
+            <div class="info">
+                <a href="<%= systemConfig.prefixAdmin%>/profile" class="d-block">
+                    <% if((typeof userInfo !== 'undefined') && userInfo) {%>
+                    <% if(userInfo !=undefined) {%>
+                        <%= userInfo.FirstName %>
+                            <%= userInfo.LastName %>
+                                <% } %>
+                                <%}%>
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                <!-- <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/chuDeBaiViet" class="nav-link" data-active="chuDeBaiViet">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Chủ đề</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/baiViet" class="nav-link" data-active="baiViet">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Bài viết</p>
+                    </a>
+                </li> -->
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/Product_Groups" class="nav-link" data-active="Product_Groups">
+                        <i class="nav-icon fas fa-list-ul"></i>
+                        <p>Product Groups</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/Product" class="nav-link" data-active="Product">
+                        <i class="nav-icon fas fa-list-ul"></i>
+                        <p>Product</p>
+                    </a>
+                </li>
+
+                
+
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/categories" class="nav-link" data-active="categories">
+                        <i class="nav-icon fas fa-list-ul"></i>
+                        <p>Categories</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/articles" class="nav-link" data-active="articles">
+                       
+                        <i class="nav-icon fas fa-newspaper"></i>
+                        <p>Articles</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/sys_Exchange_Log_Content" class="nav-link"
+                        data-active="sys_Exchange_Log_Content">                     
+                        <i class="nav-icon fas fa-clock"></i>
+                        <p>Exchange Log</p>
+                    </a>
+                </li>
+
+                <!-- <li class="nav-item">
+                                                                                                                                    <a href="<%= systemConfig.prefixAdmin %>/loaiHangHoa" class="nav-link">
+                                                                                                                                        <i class="nav-icon fas fa-user"></i>
+                                                                                                                                        <p>Loại hàng</p>
+                                                                                                                                    </a>
+                                                                                                                                    </li>
+
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/hangHoa" class="nav-link">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Hàng hóa</p>
+                    </a>
+                </li> -->
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-active="System">
+                        <!-- <i class="nav-icon fas fa-book-open"></i> -->
+                        <i class="nav-icon fab fa-centos fa-spin"></i>
+                        <!-- <i class="nav-icon fab fa-centos"></i> -->
+                        <p>System<i class="fas fa-angle-left right"></i></p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_customsettings" class="nav-link"
+                                data-active="sys_customsettings">
+                                <i class="nav-icon fas fa-cog"></i>
+                                <p>Custom Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_user" class="nav-link" data-active="sys_user">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>User</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_company" class="nav-link"
+                                data-active="sys_company">
+                                <!-- <i class="nav-icon fas fa-list-ul"></i> -->
+                                <i class="nav-icon fas fa-warehouse"></i>
+                               
+                                <p>Company</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_department" class="nav-link"
+                                data-active="sys_department">                             
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>Department</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_position" class="nav-link"
+                                data-active="sys_position">
+                                <i class="nav-icon fas fa-arrows-alt"></i>
+                                <p>Position</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_role" class="nav-link" data-active="sys_role">
+                                <i class="nav-icon fas fa-list-ul"></i>
+                                <p>Role</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_permission" class="nav-link"
+                                data-active="sys_permission">
+                                <i class="nav-icon fas fa-users-cog"></i>                              
+                                <p>Permission</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_Exchange_Log_Subject" class="nav-link"
+                                data-active="sys_Exchange_Log_Subject">
+                                <i class="nav-icon fas fa-list-ul"></i>
+                                <p>Exchange Log Subject</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/sys_FunctionForPermission" class="nav-link"
+                                data-active="sys_FunctionForPermission">
+                                <i class="nav-icon fas fa-list-ul"></i>
+                                <p>Function For Permission</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="<%= systemConfig.prefixAdmin%>/systemLog" class="nav-link"
+                                data-active="systemLog">
+                                <i class="nav-icon fas fa-list-ul"></i>
+                                <p>System Log</p>
+                            </a>
+                        </li>
+
+                        
+
+                    </ul>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/Help.docx" class="nav-link" data-active="Help.docx">
+                        <i class="nav-icon fas fa-question-circle"></i>
+                        <p>Help</p>
+                    </a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/auth/formchangepassword" class="nav-link"
+                        data-active="auth">                      
+                        <i class="nav-icon fas fa-user-shield"></i>
+                        <p>Change Password</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="<%= systemConfig.prefixAdmin %>/auth/logout" class="nav-link" data-active="logout">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>Log out</p>
+                    </a>
+                </li>
+
+
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
